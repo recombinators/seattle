@@ -1,7 +1,8 @@
 # seattle
 
-![](http://bukk.it/internat.jpg)
+### Contributors:
 
-## Team: Mark Saiget
-## Team: Constantine Hatzis
-## Team: Joel Stanner
+- [Mark Saiget](https://github.com/bm5w)
+- [Constantine Hatzis](https://github.com/constanthatz)
+- [Joel Stanner](https://github.com/poolbath1)
+- [Jacques Tardie](http://github.com/jacquestardie)
