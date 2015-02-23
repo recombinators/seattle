@@ -3,7 +3,7 @@ Input 1042196 rows
 Output 1032442 rows
 """
 
-with open('scrape_combined.csv', 'r') as csvinput:
+with open('clean.csv', 'r') as csvinput:
     firstline = csvinput.readline()
     temp_list = csvinput.readlines()
 
