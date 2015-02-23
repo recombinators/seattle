@@ -3,10 +3,9 @@ import csv
 
 with open('scrape_combined.csv', 'r') as csvinput:
     csvreader = csvinput.readline()
-    print csvreader
 
     temp_list = []
-    for i in range(100):
+    for i in range(len(csvinput)):
         temp = csvinput.readline()
 
     print temp_list
