@@ -1,33 +1,17 @@
-import csv
 
 
 with open('scrape_combined.csv', 'r') as csvinput:
-    csvreader = csvinput.readline()
+    firstline = csvinput.readline()
+    temp_list = csvinput.readlines()
 
-    temp_list = []
-    for i in range(len(csvinput)):
-        temp = csvinput.readline()
+print 'length pre set: {}'.format(len(temp_list))
 
-    print temp_list
-    print 'length pre set: {}'.format(len(temp_list))
+set_list = set(temp_list)
+print 'length post-set: {}'.format(len(set_list))
 
-    set_list = set(temp_list)
-    # print set_list
-
-    with open('clean.csv', 'wb') as output:
-        # csvwriter = csv.writer(csvoutput)
-        # # print 'set_list[0]'
-        # # print set_list[0]
-        output.writelines(set_list)
-
-    print 'length post-set: {}'.format(len(set_list))
-
-
-
-    # for i in range(1000):
-    #     new_list = temp_list.remove(temp_list[i])
-    #     if temp_list[i] in new_list:
-    #         temp_list
-
-
-
+with open('clean.csv', 'wb') as output:
+    # csvwriter = csv.writer(csvoutput)
+    # # print 'set_list[0]'
+    # # print set_list[0]
+    output.write(firstline)
+    output.writelines(set_list)
