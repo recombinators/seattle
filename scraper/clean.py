@@ -1,4 +1,7 @@
-
+"""Code for removing duplicate rows.
+Input 1042196 rows
+Output 1032442 rows
+"""
 
 with open('scrape_combined.csv', 'r') as csvinput:
     firstline = csvinput.readline()
@@ -10,8 +13,5 @@ set_list = set(temp_list)
 print 'length post-set: {}'.format(len(set_list))
 
 with open('clean.csv', 'wb') as output:
-    # csvwriter = csv.writer(csvoutput)
-    # # print 'set_list[0]'
-    # # print set_list[0]
     output.write(firstline)
     output.writelines(set_list)
