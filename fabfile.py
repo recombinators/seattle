@@ -193,7 +193,7 @@ def setup():
     run_command_on_given_server(_install_supervisor, selected_hosts)
 
 
-# Bookapp Project
+# Seattle Project
 # Deployment functions for Bookapp
 
 
