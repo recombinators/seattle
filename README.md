@@ -1,8 +1,1 @@
-# seattle
-
-### Contributors:
-
-- [Mark Saiget](https://github.com/bm5w)
-- [Constantine Hatzis](https://github.com/constanthatz)
-- [Joel Stanner](https://github.com/poolbath1)
-- [Jacques Tardie](http://github.com/jacquestardie)
+![](http://40.media.tumblr.com/5cb40f65d43e34984538c072301297ac/tumblr_nb79ezpxjU1s9vokgo1_1280.jpg)
