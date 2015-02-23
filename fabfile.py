@@ -108,7 +108,7 @@ def select_instance(state='running'):
 
     def validation(input):
         choice = int(input)
-        if not choice in range(1, len(env.instances) + 1):
+        if choice not in range(1, len(env.instances) + 1):
             raise ValueError("%d is not a valid instance" % choice)
         return choice
 
