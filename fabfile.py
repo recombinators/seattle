@@ -12,7 +12,7 @@ env.hosts = ['localhost', ]
 env.aws_region = 'us-west-2'
 
 USER = 'ubuntu'
-KEY_FILE = '/Users/chatzis/.ssh/seattle_emergency.pem'
+KEY_FILE = '~/.ssh/seattle_emergency.pem'
 
 # Bookapp CONSTANTS
 HOST = 'ec2-52-10-45-174.us-west-2.compute.amazonaws.com'
