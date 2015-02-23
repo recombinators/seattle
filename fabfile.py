@@ -10,6 +10,7 @@ from fabric.contrib.project import upload_project
 
 env.hosts = ['localhost', ]
 env.aws_region = 'us-west-2'
+env.key_filename = '~/.ssh/seattle_emergency.pem'
 
 USER = 'ubuntu'
 KEY_FILE = '~/.ssh/seattle_emergency.pem'
@@ -27,8 +28,7 @@ def host_type():
 
 def get_ec2_connection():
     if 'ec2' not in env:
-        conn = boto.ec2.connect_to_region(
-            env.aws_region, profile_name='seattle_emergency')
+        conn = boto.ec2.connect_to_region(env.aws_region)
         if conn is not None:
             env.ec2 = conn
             print "Connected to EC2 region %s" % env.aws_region
@@ -163,7 +163,7 @@ def _deploy():
     rsync_project(local_dir=LOCAL_PROJECT_DIR,
                   remote_dir=REMOTE_PROJECT_DIR,
                   exclude='*.pyc')
-    sudo('/usr/bin/supervisorctl restart bookapp')
+    sudo('/usr/bin/supervisorctl restart seattle_emergency')
 
 
 def _install_supervisor():
