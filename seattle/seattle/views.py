@@ -2,7 +2,8 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
-from geoalchemy import func
+from sqlalchemy import func
+
 
 from .models import (
     DBSession,
