@@ -23,7 +23,7 @@ class MyModel(Base):
     __tablename__ = 'incidents'
     gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     units = sa.Column(sa.UnicodeText, nullable=False)
-    date_time = sa.Column(sa.UnicodeText, nullable=False)
+    date_time = sa.Column(sa.DateTime, nullable=False)
     incident_type = sa.Column(sa.UnicodeText, nullable=False)
     address = sa.Column(sa.UnicodeText, nullable=False)
     incident_number = sa.Column(sa.UnicodeText, nullable=False)
