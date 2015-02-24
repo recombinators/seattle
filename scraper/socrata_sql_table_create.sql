@@ -1,13 +1,13 @@
 CREATE TABLE incidents
 (
   gid serial NOT NULL,
-  address character varying(100),
-  type character varying(100),
-  datetime character varying(100),
-  latitude character varying(100),
-  longitude character varying(100),
-  reportlocation character varying(100),
-  incident character varying(100),
+  units character varying(1000),
+  datetime character varying(50),
+  type character varying(50),
+  address character varying(1000),
+  incident_number character varying(50),
+  latitude character varying(50),
+  longitude character varying(50),
   the_geom geometry,
   CONSTRAINT incidents_pkey PRIMARY KEY (gid),
   CONSTRAINT enforce_dims_the_geom CHECK (st_ndims(the_geom) = 2),
@@ -25,4 +25,4 @@ CREATE INDEX incidents_the_geom_gist
   (the_geom );
 
 
--- Address,Type,Datetime,Latitude,Longitude,Report Location,Incident Number
+-- units,date,type,location,incident_number,latitude,longitude
