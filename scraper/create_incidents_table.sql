@@ -2,8 +2,8 @@ CREATE TABLE incidents
 (
   gid serial NOT NULL,
   units character varying(1000),
-  datetime character varying(50),
-  type character varying(50),
+  date_time character varying(50),
+  incident_type character varying(50),
   address character varying(1000),
   incident_number character varying(50),
   latitude character varying(50),
