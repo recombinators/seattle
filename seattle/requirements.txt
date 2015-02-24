@@ -1,4 +1,5 @@
 Chameleon==2.22
+Jinja2==2.7.3
 Mako==1.0.1
 MarkupSafe==0.23
 PasteDeploy==1.5.2
@@ -7,6 +8,7 @@ Pygments==2.0.2
 pyramid==1.5.3
 pyramid-chameleon==0.3
 pyramid-debugtoolbar==2.3
+pyramid-jinja2==2.3.3
 pyramid-mako==1.0.2
 pyramid-tm==0.11
 repoze.lru==0.6
