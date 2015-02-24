@@ -31,4 +31,5 @@ class MyModel(Base):
     longitude = sa.Column(sa.UnicodeText, nullable=False)
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
-Index('my_index', MyModel.name, unique=True, mysql_length=255)
+# I don't know what this line is for:
+# Index('my_index', MyModel.name, unique=True, mysql_length=255)
