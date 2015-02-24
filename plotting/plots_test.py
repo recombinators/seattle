@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
 import mpld3
 import os
@@ -36,38 +36,23 @@ class Entry(Base):
     units = sa.Column(sa.UnicodeText, nullable=False)
     date_time = sa.Column(sa.UnicodeText, nullable=False)
     incident_type = sa.Column(sa.UnicodeText, nullable=False)
+    address = sa.Column(sa.UnicodeText, nullable=False)
+    incident_number = sa.Column(sa.UnicodeText, nullable=False)
+    latitude = sa.Column(sa.UnicodeText, nullable=False)
+    longitude = sa.Column(sa.UnicodeText, nullable=False)
+    the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
     def __repr__(self):
-        return u"{}: {}".format(self.__class__.__name__, self.title)
-
-    @classmethod
-    def all_incident(cls, incident):
-        return DBSession.query(cls).order_by(cls.created.desc()).all()
-
-    @classmethod
-    def newest_entry(cls):
-        return DBSession.query(cls).order_by(cls.created.desc()).first()
+        return u"{}: {}".format(self.__class__.__name__, self.incident_type)
 
     @classmethod
     def all_type(cls, itype):
-        return DBSession.query(cls).filter(cls.type == itype).all()
-
-    def update_from_request(self, request):
-        self.title = request.params.get('title', None)
-        self.text = request.params.get('text', None)
-
-    def render_markdown(self):
-        return markdown.markdown(
-            self.text, extensions=['codehilite', 'fenced_code'])
-
-    def convert_strftime(self):
-        return self.created.strftime('%b %d, %Y')
+        return DBSession.query(cls).filter(cls.incident_type == itype).all()
 
     def json(self):
-        return {'title': self.title,
-                'text': self.render_markdown(),
-                'created': self.created.strftime('%b %d, %Y'),
-                'id': self.id}
+        return {'incident_type': self.incident_type,
+                'date_time': self.date_time,
+                }
 
     def json_edit_get(self):
         return {'title': self.title,
@@ -111,8 +96,22 @@ def main():
     return app
 
 if __name__ == '__main__':
-    main()
-    entry = Entry.all_type('Aid Response')
-    pprint.pprint(entry)
-    plt.plot([3, 1, 4, 1, 5], 'ks-', mec='w', mew=5, ms=20)
-    mpld3.show()
+    # main()
+    # entry = Entry.all_type('Aid Response')
+    # for i in entry:
+    #     pprint.pprint(i.json())
+
+    # Histogram with modified axes/grid
+    fig = plt.figure()
+
+    ax = fig.add_subplot(111, axisbg='#EEEEEE')
+    ax.grid(color='white', linestyle='solid')
+
+    x = np.random.normal(size=1000)
+    pprint.pprint(x)
+    ax.hist(x, 30, histtype='stepfilled', fc='lightblue', alpha=0.5)
+
+    mpld3.show(fig)
+
+    # plt.plot([3, 1, 4, 1, 5], 'ks-', mec='w', mew=5, ms=20)
+    # mpld3.show()
