@@ -2,6 +2,20 @@ import numpy
 import matplotlib.pyplot as plt
 import mpld3
 import os
+import logging
+from pyramid.config import Configurator
+from pyramid.session import SignedCookieSessionFactory
+from pyramid.view import view_config
+from waitress import serve
+import psycopg2
+from contextlib import closing
+from pyramid.events import NewRequest, subscriber
+import datetime as dt
+from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound, HTTPInternalServerError
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.security import remember, forget
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
@@ -9,24 +23,25 @@ from sqlalchemy.orm import (
     sessionmaker,
     )
 from zope.sqlalchemy import ZopeTransactionExtension
+import pprint
 
-USER = chatzis
+USER = 'chatzis'
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+Base = declarative_base()
 
 
 class Entry(Base):
-    __tablename__ = 'entries'
-    id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-    title = sa.Column(sa.Unicode(127), nullable=False)
-    text = sa.Column(sa.UnicodeText, nullable=False)
-    created = sa.Column(
-        sa.DateTime, nullable=False, default=datetime.datetime.utcnow
-    )
+    __tablename__ = 'incidents'
+    gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
+    units = sa.Column(sa.UnicodeText, nullable=False)
+    date_time = sa.Column(sa.UnicodeText, nullable=False)
+    incident_type = sa.Column(sa.UnicodeText, nullable=False)
 
     def __repr__(self):
         return u"{}: {}".format(self.__class__.__name__, self.title)
 
     @classmethod
-    def all(cls):
+    def all_incident(cls, incident):
         return DBSession.query(cls).order_by(cls.created.desc()).all()
 
     @classmethod
@@ -34,16 +49,8 @@ class Entry(Base):
         return DBSession.query(cls).order_by(cls.created.desc()).first()
 
     @classmethod
-    def by_id(cls, id):
-        return DBSession.query(cls).filter(cls.id == id).one()
-
-    @classmethod
-    def from_request(cls, request):
-        title = request.params.get('title', None)
-        text = request.params.get('text', None)
-        created = datetime.datetime.utcnow()
-        new_entry = cls(title=title, text=text, created=created)
-        DBSession.add(new_entry)
+    def all_type(cls, itype):
+        return DBSession.query(cls).filter(cls.type == itype).all()
 
     def update_from_request(self, request):
         self.title = request.params.get('title', None)
@@ -82,9 +89,6 @@ def main():
     DBSession.configure(bind=engine)
 
     settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
-    manager = BCRYPTPasswordManager()
-    settings['auth.password'] = os.environ.get(
-        'AUTH_PASSWORD', manager.encode('secret'))
     # secret value for session signing:
     secret = os.environ.get('JOURNAL_SESSION_SECRET', 'itsaseekrit')
     session_factory = SignedCookieSessionFactory(secret)
@@ -102,16 +106,13 @@ def main():
     )
     config.include('pyramid_jinja2')
     config.include('pyramid_tm')
-    config.add_static_view('static', os.path.join(here, 'static'))
-    config.add_route('home', '/')
-    config.add_route('add', '/add')
-    config.add_route('login', '/login')
-    config.add_route('logout', '/logout')
-    config.add_route('detail', '/detail/{id}')
-    config.add_route('editview', '/editview')
     config.scan()
     app = config.make_wsgi_app()
     return app
 
-plt.plot([3, 1, 4, 1, 5], 'ks-', mec='w', mew=5, ms=20)
-mpld3.show()
+if __name__ == '__main__':
+    main()
+    entry = Entry.all_type('Aid Response')
+    pprint.pprint(entry)
+    plt.plot([3, 1, 4, 1, 5], 'ks-', mec='w', mew=5, ms=20)
+    mpld3.show()
