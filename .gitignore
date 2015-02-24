@@ -64,3 +64,6 @@ output.sql
 
 # Mac stuff
 .DS_Store
+
+# QGIS stuff
+seattle.qgs
