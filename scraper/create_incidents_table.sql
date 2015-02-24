@@ -2,7 +2,7 @@ CREATE TABLE incidents
 (
   gid serial NOT NULL,
   units character varying(1000),
-  date_time character varying(50),
+  date_time TIMESTAMP WITH TIME ZONE,
   incident_type character varying(50),
   address character varying(1000),
   incident_number character varying(50),
