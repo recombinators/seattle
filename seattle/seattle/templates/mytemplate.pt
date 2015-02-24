@@ -35,6 +35,7 @@
             <div class="content">
               <h1><span class="font-semi-bold">Pyramid</span> <span class="smaller">Alchemy scaffold</span></h1>
               <p class="lead">Welcome to <span class="font-normal">${project}</span>, an&nbsp;application generated&nbsp;by<br>the <span class="font-normal">Pyramid Web Framework 1.5.3</span>.</p>
+              <p>Output: ${one.incident_number}</p>
             </div>
           </div>
         </div>

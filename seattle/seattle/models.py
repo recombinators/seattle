@@ -1,9 +1,9 @@
-# from sqlalchemy import (
-#     Column,
-#     Index,
-#     Integer,
-#     Text,
-#     )
+from sqlalchemy import (
+    Column,
+    Index,
+    Integer,
+    Text,
+    )
 import sqlalchemy as sa
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -32,4 +32,4 @@ class MyModel(Base):
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
 # I don't know what this line is for:
-# Index('my_index', MyModel.name, unique=True, mysql_length=255)
+Index('my_index', MyModel.gid, unique=True, mysql_length=255)
