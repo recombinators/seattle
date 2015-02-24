@@ -2,6 +2,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
+from geoalchemy import func
 
 from .models import (
     DBSession,
@@ -17,6 +18,24 @@ def my_view(request):
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'seattle'}
 
+@view_config(route_name='one_hundred', renderer='json')
+def one_hundred(request):
+    try:
+        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, -122.336072, 47.623636, 0.001))
+        # print 'query: {}\ncount: {}'.format(output, output.count())
+
+
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    list_ = []
+    for x in output:
+        del x.__dict__['date_time']
+        del x.__dict__['_sa_instance_state']
+        list_.append(x.__dict__)
+
+
+    # import pdb; pdb.set_trace()
+    return {'output': list_}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
