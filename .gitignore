@@ -61,3 +61,6 @@ clean_addr_socrata.qpj
 clean_addr_socrata.shp
 clean_addr_socrata.shx
 output.sql
+
+# Mac stuff
+.DS_Store
