@@ -1,5 +1,6 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
+import os
 
 from .models import (
     DBSession,
@@ -10,6 +11,15 @@ from .models import (
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    settings = {}
+    settings['reload_all'] = os.environ.get('DEBUG', True)
+    settings['debug_all'] = os.environ.get('DEBUG', True)
+    settings['sqlalchemy.url'] = os.environ.get(
+        # must be rfc1738 URL
+        'DATABASE_URL', 'postgresql://mark:@localhost:5432/seattle'
+    )
+
+
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
