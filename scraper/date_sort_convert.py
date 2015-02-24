@@ -5,6 +5,15 @@ import datetime
 
 # units,date,type,location,incident_number,latitude,longitude
 
+
+class PST(datetime.tzinfo):
+    def utcoffset(self, dt):
+        return datetime.timedelta(hours=-8)
+
+    def dst(self, dt):
+        return datetime.timedelta(0)
+
+
 with open('scraped_geocoded.csv', 'r') as csvinput:
     firstline = csvinput.readline()
     temp_list = csvinput.readlines()
@@ -15,8 +24,8 @@ with open('scraped_geocoded.csv', 'r') as csvinput:
         line_split = line.split(',')
 
         try:
-            line_split[1] = datetime.datetime.isoformat(
-                dateutil.parser.parse(line_split[1]))
+            DEFAULT = datetime.datetime(1900, 01, 01, 00, 00, tzinfo=PST())
+            line_split[1] = dateutil.parser.parse(line_split[1], default=DEFAULT).isoformat()
         except ValueError:
             pass
 
@@ -24,9 +33,9 @@ with open('scraped_geocoded.csv', 'r') as csvinput:
 
     data_sorted = sorted(data_list_of_lists, key=itemgetter(1))
     for i, line in enumerate(data_sorted):
+        print(data_sorted[i])
         data_sorted[i] = ','.join(line)
 
 
-with open('clean_date.csv', 'wb') as output:
-    output.write(firstline)
+with open('clean_date2.csv', 'wb') as output:
     output.writelines(data_sorted)
