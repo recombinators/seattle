@@ -111,7 +111,7 @@ svg.append("svg:clipPath")
     .attr("width", x(1) - x(0))
     .attr("height", y(0) - y(1));
 
-d3.csv("http://Users/chatzis/projects/seattle/plotting/commitment.csv", function(data) {
+d3.csv("http://localhost/Users/chatzis/projects/seattle/plotting/commitment.csv", function(data) {
   // get header names
   var header_row=d3.keys(data[0])
   var gen_names = header_row.filter(function(s){return s.substring(0,7)=='power: '}).map(function(s){return s.substring(7,s.length)});
