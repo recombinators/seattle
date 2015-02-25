@@ -114,10 +114,10 @@ def line_plot(request):
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
     date_range = max_date - min_date
     number_months = int(math.ceil(date_range/30))
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     days_in_month = 30
     start_date = min_date
-    date = [start_date]
+    date = start_date
 
     months = []
     for i in range(number_months):
@@ -133,7 +133,7 @@ def line_plot(request):
                     count[k][j] += 1
     print(count)
 
-    return {'output': [months[1:], count]}
+    return {'output': [[months[1:], months[1:], months[1:]], count]}
 
 
 conn_err_msg = """\

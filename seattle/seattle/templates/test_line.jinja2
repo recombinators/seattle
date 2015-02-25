@@ -28,7 +28,8 @@ body {
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
 
-var values = {{output}}
+var bulk_data = {{output}}
+var values = [bulk_data[0][0], bulk_data[1][0]]
 
 dates = []
 for (i = 0; i < values[0].length; i++) { 
@@ -87,7 +88,7 @@ svg.append("g")
     .attr("y", 6)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
-    .text("Price ($)");
+    .text("Incidents");
 
 svg.append("path")
     .datum(data)
