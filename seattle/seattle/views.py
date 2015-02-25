@@ -68,7 +68,7 @@ def center(request):
 
 @view_config(route_name='index',
              renderer='templates/index.jinja2')
-def major_cat(request):
+def mvp_v1(request):
     """Returns epoch datetime params as a dict with keys for each major type and
     values corresponding to the epoch times."""
     lat = 47.609907
