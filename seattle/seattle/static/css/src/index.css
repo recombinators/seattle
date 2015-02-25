@@ -3,7 +3,7 @@
 @import 'reset.css';
 @import 'buttons.css';
 @import 'forms.css';
-@import 'color.css';
+@import 'colors.css';
 @import 'spacing.css';
 @import 'typography.css';
 @import 'links.css';
@@ -22,9 +22,9 @@
 	/* --ms2: ; */
 	/* --ms1: ; */
 	/* --ms0: ; */
-	/* --copy-font:	; */
-	/* --copy-font-weight: ; */
-	/* --copy-font-color:	; */
+	--copy-font: fira-sans;
+	--copy-font-weight: 400;
+	--copy-font-color: #444;
 	/* --heading-font: ; */
 	/* --heading-font-color: ; */
 	/* --heading-font-weight: ; */
@@ -46,32 +46,29 @@
 
 }
 
-body {
-    margin: 0;
-    padding: 0;
+header {
+    position: relative;
+    height: 50vh;
 }
 
-.fc {
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 4px solid #f6f6f6;
+    border-bottom: 4px solid #f6f6f6;
+}
+
+.summary {
+    z-index: 1;
+    background: rgba(255,255,255,0.2)
+}
+
+nav {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: stretch;
-    align-content: stretch;
-}
-
-.fi {
-}
-
-.title {
-    padding: 1em;
-    flex: 1;
-}
-
-.data {
-    padding: 1em;
-    flex: 1.618;
-}
-
-.map-container {
-    flex: 2.617;
+    justify-content: space-between;
+    align-items: baseline;
 }

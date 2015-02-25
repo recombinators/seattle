@@ -3,14 +3,6 @@
 @custom-media --medium (min-width: 40rem);
 @custom-media --large (min-width: 52rem);
 
-
-/* Responsive padding */
-/* As viewport size increases, increase body padding */
-body { padding: 1em; }
-@media (--medium) { body { padding: 2rem; } }
-@media (--large) { body { padding: 4rem; } }
-
-
 /* Container */
 .container { max-width: var(--container-width); }
 .center { margin: 0 auto; }

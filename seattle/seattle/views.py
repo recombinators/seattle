@@ -42,27 +42,13 @@ def convert_json(query):
     return list_output
 
 
-@view_config(route_name='home', renderer='templates/test.jinja2')
+@view_config(route_name='index', renderer='templates/index.jinja2')
 def my_view(request):
     try:
         one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'seattle'}
-
-
-@view_config(route_name='MVP', renderer='json')
-def mvp(request):
-    "Returns JSON object with all incidents from given lat/long within a set radius."
-    lat = request.params.get('latitude', None)
-    lon = request.params.get('longitude', None)
-    try:
-        output = DBSession.query(Incidents_Model).filter(func.ST_Point_Inside_Circle(Incidents_Model.the_geom, lon, lat, 0.001))
-        # print 'query: {}\ncount: {}'.format(output, output.count())
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    # Convert sqlalchemy object into list of dictionaries.
-    return {'output': convert_json(output)}
 
 
 @view_config(route_name='center', renderer='json')
@@ -107,8 +93,6 @@ def major_cat(request):
     return {'lists': output_dict, 'percentages': output_percentages_dict}
 
 
-
-
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:
@@ -124,4 +108,3 @@ might be caused by one of the following things:
 After you fix the problem, please restart the Pyramid application to
 try it again.
 """
-
