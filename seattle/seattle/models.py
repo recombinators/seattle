@@ -33,8 +33,12 @@ class MyModel(Base):
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
     @classmethod
-    def by_id(cls, gid):
+    def by_gid(cls, gid):
         return DBSession.query(cls).filter(cls.gid == gid).one()
+
+    @classmethod
+    def by_incident_type(cls, incident_type):
+        return DBSession.query(cls).filter(cls.incident_type == incident_type).all()
 
     @classmethod
     def circle_radius(cls, lat, lon, radius):
