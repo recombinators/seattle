@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Seattle</title>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'/>
+        <meta name='author' content=''>
+        <meta name='keywords' content='' />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel='stylesheet' href='/static/css/index.min.css'>
+    </head>
+
+    <body>
+
+        <h1>Sup</h1>
+        <ul>
+            {% for row in output %}
+                <li>
+                    {% for key in row %}
+                        <p>{{key}}: {{row[key]}}</p>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <script src="//use.typekit.net/miq6xoz.js"></script>
+        <script>try{Typekit.load();}catch(e){}</script>
+    </body>
+</html>

@@ -1,5 +1,6 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
+# import os
 
 from .models import (
     DBSession,
@@ -14,8 +15,11 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
-    config.include('pyramid_chameleon')
+    config.include('pyramid_jinja2')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
+    config.add_route('one_hundred', '/100')
+    config.add_route('MVP', '/mvp')
+    config.add_route('center', '{lat}/{lon}')
     config.scan()
     return config.make_wsgi_app()
