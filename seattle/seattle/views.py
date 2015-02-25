@@ -27,6 +27,16 @@ def epoch_time(dt):
     delta = dt - epoch
     return delta.total_seconds()/60/60/24
 
+def convert_json(query):
+    """Convert sqlalchemy query into JSON serializable list."""
+    list_output = []
+    for x in query:
+        """Convert datetime into epoch_time."""
+        x.__dict__['date_time'] = epoch_time(x.__dict__['date_time'])
+        del x.__dict__['_sa_instance_state']
+        list_output.append(x.__dict__)
+    return list_output
+
 @view_config(route_name='home', renderer='templates/test.jinja2')
 def my_view(request):
     try:
@@ -37,21 +47,28 @@ def my_view(request):
 
 @view_config(route_name='one_hundred', renderer='json')
 def one_hundred(request):
+    "Returns JSON object with list of dictionaries."
     try:
         output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, -122.336072, 47.623636, 0.001))
         # print 'query: {}\ncount: {}'.format(output, output.count())
-
-
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    list_ = []
-    for x in output:
-        """Convert datetime into epoch_time."""
-        x.__dict__['date_time'] = epoch_time(x.__dict__['date_time'])
-        del x.__dict__['_sa_instance_state']
-        list_.append(x.__dict__)
 
-    return {'output': list_}
+    # Convert sqlalchemy object into list of dictionaries.
+    return {'output': convert_json(output)}
+
+@view_config(route_name='MVP', renderer='json')
+def mvp(request):
+    "Returns JSON object with all incidents from given lat/long within a set radius."
+    try:
+        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, -122.336072, 47.623636, 0.001))
+        # print 'query: {}\ncount: {}'.format(output, output.count())
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+    # Convert sqlalchemy object into list of dictionaries.
+    return {'output': convert_json(output)}
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
