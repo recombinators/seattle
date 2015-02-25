@@ -10,22 +10,16 @@ from .models import (
     MyModel,
     )
 
-import datetime
+import time
+import pytz
 
-class PST(datetime.tzinfo):
-    """Class defining correct timezone, used in epoch_time."""
-    def utcoffset(self, dt):
-        return datetime.timedelta(hours=-8)
-
-    def dst(self, dt):
-        return datetime.timedelta(0)
 
 def epoch_time(dt):
     """Method to convert datetime object into epoch time in days."""
-    epoch = datetime.datetime.fromtimestamp(0, PST())
-    # import pdb; pdb.set_trace()
-    delta = dt - epoch
-    return delta.total_seconds()/60/60/24
+    utc = pytz.timezone('UTC')
+    utc_dt = utc.normalize(dt.astimezone(utc))
+    return time.mktime(utc_dt.timetuple())/60/60/24
+
 
 def convert_json(query):
     """Convert sqlalchemy query into JSON serializable list."""
@@ -47,7 +41,7 @@ def my_view(request):
     return {'one': one, 'project': 'seattle'}
 
 
-@view_config(route_name='one_hundred', renderer='json')
+@view_config(route_name='one_hundred', renderer='templates/radius_test.jinja2')
 def one_hundred(request):
     "Returns JSON object with list of dictionaries."
     try:
