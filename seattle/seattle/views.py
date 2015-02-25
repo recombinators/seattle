@@ -12,6 +12,7 @@ from .models import (
 
 import time
 import pytz
+import datetime
 
 
 def epoch_time(dt):
@@ -85,7 +86,7 @@ def major_cat(request):
     values corresponding to the epoch times."""
     lat = 47.609907
     lon = -122.337779
-    radius = 0.003
+    radius = 0.005
     try:
         output = []
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
@@ -96,7 +97,14 @@ def major_cat(request):
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     names = ['fire', 'mvi', 'crime'] #, 'other'
     output_dict = dict(zip(names, output))
-    return {'output': output_dict}
+    output_percentages = []
+    output_percentages.append(Incidents_Model.percentage(output[0]))
+    output_percentages.append(Incidents_Model.percentage(output[1]))
+    output_percentages.append(Incidents_Model.percentage(output[2]))
+    output_percentages_dict = dict(zip(names, output_percentages))
+
+
+    return {'lists': output_dict, 'percentages': output_percentages_dict}
 
 
 

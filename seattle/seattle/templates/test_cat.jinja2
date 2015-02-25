@@ -23,15 +23,18 @@ body {
 
 </style>
 <body>
-<h3>fire:</h3>{{output.fire}}
-<h3>mvi:</h3>{{output.mvi}}
-<h3>crime:</h3>{{output.crime}}
-<h3>other:</h3>{{output.other}}
+<h3>fire:</h3>{{lists.fire}}
+<h3>mvi:</h3>{{lists.mvi}}
+<h3>crime:</h3>{{lists.crime}}
+<h3>fire percentage:</h3>{{percentages.fire}}
+<h3>mvi percentage:</h3>{{percentages.mvi}}
+<h3>crime percentage:</h3>{{percentages.crime}}
+
 <script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
 <script>
 
 // Generate a log-normal distribution with a median of 30 minutes.
-var values = {{output}};
+var values = {{lists.fire}};
 var newvalues = [];
 // Converting epoch time in input (in days) to Date
 for (i = 0; i < values.length; i++) { 

@@ -15,6 +15,7 @@ from sqlalchemy.orm import (
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
+import time
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -69,6 +70,28 @@ class Incidents_Model(Base):
                         cls.major_category == major_cat)
                 .limit(limit)
                 )
+
+    @classmethod
+    def percentage(cls, list_of_times):
+        """Given a list of times in epoch time, return the percentage increase over the last year."""
+        # current epoch time in days
+        # current_epoch_time = time.time()/60/60/24
+        one_year_ago_epoch = list_of_times[-1]-365
+        length_list = len(list_of_times)
+        incidents_prior = 0
+        for time in list_of_times:
+            if time < one_year_ago_epoch:
+                incidents_prior += 1
+            if time > one_year_ago_epoch:
+                break
+
+        incidents_last_year = length_list-incidents_prior
+        years_prior = (one_year_ago_epoch-list_of_times[0])/365
+        incidents_per_year_prior = incidents_prior/years_prior
+        incidents_per_year_last_year = incidents_last_year
+        percent = 100*(incidents_per_year_last_year-incidents_per_year_prior)/incidents_per_year_prior
+        return round(percent, 2)
+
 
     def json(self):
         return {'gid': self.gid,
