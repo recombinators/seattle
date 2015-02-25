@@ -44,6 +44,11 @@ class MyModel(Base):
     def circle_radius(cls, lat, lon, radius):
         return DBSession.query(cls).filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat, radius)).all()
 
+    @classmethod
+    def random_circle(cls, lat, long, radius, limit):
+        """Outputs random entries from a given radius, with limited number."""
+        return DBSession.query(cls).order_by(func.random()).filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat, radius)).limit(limit)
+
     def json(self):
         return {'gid': self.gid,
                 'units': self.units,

@@ -25,7 +25,8 @@ def epoch_list(a_list):
     date_list= []
     for item in a_list:
         date_list.append(epoch_time(item.date_time))
-    return date_list
+
+    return sorted(date_list)
 
 def convert_json(query):
     """Convert sqlalchemy query into JSON serializable list."""
@@ -77,10 +78,10 @@ def center(request):
 
 @view_config(route_name='histo', renderer='templates/test_histo.jinja2')
 def center(request):
-    "Returns lat/lon params as a list."
+    "Returns epoch datetime params as a list."
     lat = 47.623636
     lon = -122.336072
-    radius = 0.005
+    radius = 0.003
     try:
         output = MyModel.circle_radius(lat, lon, radius)
         print 'output type: {}'.format(type(output))
