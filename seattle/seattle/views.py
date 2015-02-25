@@ -37,6 +37,7 @@ def convert_json(query):
         list_output.append(x.__dict__)
     return list_output
 
+
 @view_config(route_name='home', renderer='templates/test.jinja2')
 def my_view(request):
     try:
@@ -44,6 +45,7 @@ def my_view(request):
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'seattle'}
+
 
 @view_config(route_name='one_hundred', renderer='json')
 def one_hundred(request):
@@ -57,15 +59,17 @@ def one_hundred(request):
     # Convert sqlalchemy object into list of dictionaries.
     return {'output': convert_json(output)}
 
+
 @view_config(route_name='MVP', renderer='json')
 def mvp(request):
     "Returns JSON object with all incidents from given lat/long within a set radius."
+    lat = request.params.get('latitude', None)
+    lon = request.params.get('longitude', None)
     try:
-        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, -122.336072, 47.623636, 0.001))
+        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
         # print 'query: {}\ncount: {}'.format(output, output.count())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-
     # Convert sqlalchemy object into list of dictionaries.
     return {'output': convert_json(output)}
 
