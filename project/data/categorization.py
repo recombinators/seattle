@@ -118,6 +118,9 @@ with open('dataV2.csv', 'r') as csvinput:
         elif row[2] in misc_list:
             row.append('Other')
             row.append('Misc')
+        else:
+            row.append('Other')
+            row.append('Misc')
 
         new_list.append(row)
 
