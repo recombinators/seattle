@@ -82,11 +82,11 @@ def center(request):
     return {'output': convert_json(output)}
 
 
-@view_config(route_name='histo', renderer='json')
+@view_config(route_name='histo', renderer='templates/test_histo.jinja2')
 def center(request):
     "Returns lat/lon params"
-    lat = request.matchdict.get('lat', None)
-    lon = request.matchdict.get('lon', None)
+    lat = 47.623636
+    lon = -122.336072
     try:
         output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
         # print 'query: {}\ncount: {}'.format(output, output.count())
@@ -97,7 +97,7 @@ def center(request):
     output_list = []
     for item in temp_list:
         output_list.append(item['date_time'])
-    # import pdb; pdb.
+    import pdb; pdb.set_trace()
     return {'output': output_list}
 
 conn_err_msg = """\
