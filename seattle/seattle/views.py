@@ -74,6 +74,13 @@ def mvp(request):
     return {'output': convert_json(output)}
 
 
+@view_config(route_name='center', renderer='json')
+def center(request):
+    "Returns lat/lon params"
+    lat = request.matchdict.get('lat', None)
+    lon = request.matchdict.get('lon', None)
+    return {'lat': lat, 'lon': lon, }
+
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:
