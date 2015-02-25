@@ -20,13 +20,15 @@ def epoch_time(dt):
     utc_dt = utc.normalize(dt.astimezone(utc))
     return time.mktime(utc_dt.timetuple())/60/60/24
 
+
 def epoch_list(a_list):
-    """Convert query.all() list into a list with only epoch time."""
-    date_list= []
+    """Convert query.all() list into a sorted list with only epoch time."""
+    date_list = []
     for item in a_list:
         date_list.append(epoch_time(item.date_time))
 
     return sorted(date_list)
+
 
 def convert_json(query):
     """Convert sqlalchemy query into JSON serializable list."""
@@ -79,15 +81,22 @@ def center(request):
 @view_config(route_name='major_category',
              renderer='templates/test_cat.jinja2')
 def major_cat(request):
-    "Returns epoch datetime params as a list filtered on Major Category."
-    lat = 47.623636
-    lon = -122.336072
+    """Returns epoch datetime params as a dict with keys for each major type and
+    values corresponding to the epoch times."""
+    lat = 47.609907
+    lon = -122.337779
     radius = 0.003
     try:
-        output = Incidents_Model.cat_circle(lat, lon, radius)
+        output = []
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+        # output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Other', radius)))
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'output': epoch_list(output)}
+    names = ['fire', 'mvi', 'crime'] #, 'other'
+    output_dict = dict(zip(names, output))
+    return {'output': output_dict}
 
 
 
