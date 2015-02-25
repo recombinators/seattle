@@ -30,12 +30,14 @@
             if (!mapboxgl.util.supported()) {
               alert('Your browser does not support Mapbox GL');
             } else {
-                new mapboxgl.Map({
+                var map = new mapboxgl.Map({
                     container: 'map',
                     style: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v7.json',
                     center: [47.64,-122.34],
                     zoom: 9
                 });
+                var bounds = map.getCenter();
+                console.log(bounds);
             }
         </script>
 
