@@ -29,24 +29,32 @@ body {
 
 // Generate a log-normal distribution with a median of 30 minutes.
 var values = {{output}};
+var newvalues = [];
+for (i = 0; i < values.length; i++) { 
+    newvalues.push(new Date(values[i]*1000*60*60*24));
+}
+
+var minDate = newvalues[0];
+var maxDate = newvalues[newvalues.length - 1];
+var bin_number = Math.floor((maxDate - minDate)/(1000*60*60*24));
 
 // Formatters for counts and times (converting numbers to Dates).
 var formatCount = d3.format(",.0f"),
     formatTime = d3.time.format("%Y/%m/%d"),
-    formatMinutes = function(d) { return formatTime(new Date(2012, 0, 1, 0, d)); };
+    formatMinutes = function(d) { return formatTime(new Date(d)); };
 
 var margin = {top: 10, right: 30, bottom: 30, left: 30},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.linear()
-    .domain([0, 120])
+var x = d3.time.scale()
+    .domain([minDate, maxDate])
     .range([0, width]);
 
 // Generate a histogram using twenty uniformly-spaced bins.
 var data = d3.layout.histogram()
-    .bins(x.ticks(178))
-    (values);
+    .bins(x.ticks(bin_number))
+    (newvalues);
 
 var y = d3.scale.linear()
     .domain([0, d3.max(data, function(d) { return d.y; })])
@@ -54,8 +62,14 @@ var y = d3.scale.linear()
 
 var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom")
-    .tickFormat(formatMinutes);
+    .orient("bottom");
+    // .tickFormat(formatMinutes);
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(4);
+    // .tickFormat(formatMinutes);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -71,19 +85,24 @@ var bar = svg.selectAll(".bar")
 
 bar.append("rect")
     .attr("x", 1)
-    .attr("width", x(data[0].dx) - 1)
+    .attr("width", x(new Date(data[0].x.getTime() + data[0].dx)))
     .attr("height", function(d) { return height - y(d.y); });
 
 bar.append("text")
     .attr("dy", ".75em")
     .attr("y", 6)
-    .attr("x", x(data[0].dx) / 2)
+    .attr("x", x(new Date(data[0].dx)) / 2)
     .attr("text-anchor", "middle")
     .text(function(d) { return formatCount(d.y); });
 
 svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+    .call(xAxis)
+
+svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
+    
 
 </script>
