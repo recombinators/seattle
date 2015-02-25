@@ -76,22 +76,21 @@ def center(request):
     return {'output': convert_json(output)}
 
 
-@view_config(route_name='histo', renderer='templates/test_histo.jinja2')
-def center(request):
-    "Returns epoch datetime params as a list."
+@view_config(route_name='major_category',
+             renderer='templates/test_cat.jinja2')
+def major_cat(request):
+    "Returns epoch datetime params as a list filtered on Major Category."
     lat = 47.623636
     lon = -122.336072
     radius = 0.003
     try:
-        output = MyModel.circle_radius(lat, lon, radius)
-        print 'output type: {}'.format(type(output))
-        print 'output length: {}'.format(len(output))
-        # import pdb; pdb.set_trace()
-        # output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.005))
-        # print 'query: {}\ncount: {}'.format(output, output.count())
+        output = MyModel.major_category(lat, lon, radius)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'output': epoch_list(output)}
+
+
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

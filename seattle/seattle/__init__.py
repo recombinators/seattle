@@ -22,5 +22,6 @@ def main(global_config, **settings):
     config.add_route('MVP', '/mvp')
     config.add_route('center', '{lat}/{lon}')
     config.add_route('histo', '/histo')
+    config.add_route('major_category', '/cat')
     config.scan()
     return config.make_wsgi_app()
