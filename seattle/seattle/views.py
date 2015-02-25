@@ -20,6 +20,12 @@ def epoch_time(dt):
     utc_dt = utc.normalize(dt.astimezone(utc))
     return time.mktime(utc_dt.timetuple())/60/60/24
 
+def epoch_list(a_list):
+    """Convert query.all() list into a list with only epoch time."""
+    date_list= []
+    for item in a_list:
+        date_list.append(epoch_time(item.date_time))
+    return date_list
 
 def convert_json(query):
     """Convert sqlalchemy query into JSON serializable list."""
@@ -74,24 +80,17 @@ def center(request):
     "Returns lat/lon params as a list."
     lat = 47.623636
     lon = -122.336072
-    radius = 0.001
+    radius = 0.005
     try:
         output = MyModel.circle_radius(lat, lon, radius)
         print 'output type: {}'.format(type(output))
-        import pdb; pdb.set_trace()
+        print 'output length: {}'.format(len(output))
+        # import pdb; pdb.set_trace()
         # output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.005))
         # print 'query: {}\ncount: {}'.format(output, output.count())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    # Convert sqlalchemy object into list of dictionaries.
-    # temp_list = convert_json(output)
-
-    date_list = []
-    for item in output:
-
-        date_list.append(epoch_time(item.date_time))
-        # print "xxxx {}".format(epoch_time(item.date_time))
-    return {'output': date_list}
+    return {'output': epoch_list(output)}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
