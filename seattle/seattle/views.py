@@ -42,13 +42,13 @@ def convert_json(query):
     return list_output
 
 
-@view_config(route_name='index', renderer='templates/index.jinja2')
-def my_view(request):
-    try:
-        one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'seattle'}
+# @view_config(route_name='index', renderer='templates/index.jinja2')
+# def my_view(request):
+#     try:
+#         one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
+#     except DBAPIError:
+#         return Response(conn_err_msg, content_type='text/plain', status_int=500)
+#     return {'one': one, 'project': 'seattle'}
 
 
 @view_config(route_name='center', renderer='json')
@@ -65,9 +65,9 @@ def center(request):
     return {'output': convert_json(output)}
 
 
-@view_config(route_name='major_category',
-             renderer='templates/test_cat.jinja2')
-def major_cat(request):
+@view_config(route_name='index',
+             renderer='templates/index.jinja2')
+def mvp_v1(request):
     """Returns epoch datetime params as a dict with keys for each major type and
     values corresponding to the epoch times."""
     lat = 47.609907
