@@ -41,7 +41,7 @@ def my_view(request):
     return {'one': one, 'project': 'seattle'}
 
 
-@view_config(route_name='one_hundred', renderer='templates/radius_test.jinja2')
+@view_config(route_name='one_hundred', renderer='templates/j3_histo.jinja2')
 def one_hundred(request):
     "Returns JSON object with list of dictionaries."
     try:
@@ -81,6 +81,24 @@ def center(request):
     # Convert sqlalchemy object into list of dictionaries.
     return {'output': convert_json(output)}
 
+
+@view_config(route_name='histo', renderer='json')
+def center(request):
+    "Returns lat/lon params"
+    lat = request.matchdict.get('lat', None)
+    lon = request.matchdict.get('lon', None)
+    try:
+        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
+        # print 'query: {}\ncount: {}'.format(output, output.count())
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    # Convert sqlalchemy object into list of dictionaries.
+    temp_list = convert_json(output)
+    output_list = []
+    for item in temp_list:
+        output_list.append(item['date_time'])
+    # import pdb; pdb.
+    return {'output': output_list}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
