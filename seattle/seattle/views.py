@@ -97,7 +97,6 @@ def center(request):
     output_list = []
     for item in temp_list:
         output_list.append(item['date_time'])
-    import pdb; pdb.set_trace()
     return {'output': output_list}
 
 conn_err_msg = """\
