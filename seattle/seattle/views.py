@@ -7,7 +7,7 @@ from sqlalchemy import func
 
 from .models import (
     DBSession,
-    MyModel,
+    Incidents_Model,
     )
 
 import time
@@ -42,7 +42,7 @@ def convert_json(query):
 @view_config(route_name='home', renderer='templates/test.jinja2')
 def my_view(request):
     try:
-        one = DBSession.query(MyModel).filter(MyModel.gid == 378).first()
+        one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'one': one, 'project': 'seattle'}
@@ -54,7 +54,7 @@ def mvp(request):
     lat = request.params.get('latitude', None)
     lon = request.params.get('longitude', None)
     try:
-        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
+        output = DBSession.query(Incidents_Model).filter(func.ST_Point_Inside_Circle(Incidents_Model.the_geom, lon, lat, 0.001))
         # print 'query: {}\ncount: {}'.format(output, output.count())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
@@ -68,7 +68,7 @@ def center(request):
     lat = request.matchdict.get('lat', None)
     lon = request.matchdict.get('lon', None)
     try:
-        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
+        output = DBSession.query(Incidents_Model).filter(func.ST_Point_Inside_Circle(Incidents_Model.the_geom, lon, lat, 0.001))
         # print 'query: {}\ncount: {}'.format(output, output.count())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
@@ -84,7 +84,7 @@ def major_cat(request):
     lon = -122.336072
     radius = 0.003
     try:
-        output = MyModel.major_category(lat, lon, radius)
+        output = Incidents_Model.cat_circle(lat, lon, radius)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     return {'output': epoch_list(output)}

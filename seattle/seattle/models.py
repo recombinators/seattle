@@ -20,7 +20,7 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
-class MyModel(Base):
+class Incidents_Model(Base):
     __tablename__ = 'incidents'
     gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     units = sa.Column(sa.UnicodeText, nullable=False)
@@ -60,18 +60,13 @@ class MyModel(Base):
                 )
 
     @classmethod
-    def major_category(cls, lat, lon, radius=0.003, limit=1000):
+    def cat_circle(cls, lat, lon, radius=0.003, limit=1000):
         """Outputs list of incidents filtered by Major Category"""
-
-        import pdb; pdb.set_trace()
-
-    
-
         return (DBSession.query(cls)
                 .order_by(func.random())
                 .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
                                                     radius),
-                        func.cls.major_category == 'Fire')
+                        cls.major_category == 'Fire')
                 .limit(limit)
                 )
 
@@ -89,4 +84,4 @@ class MyModel(Base):
 
 
 # I don't know what this line is for:
-Index('my_index', MyModel.gid, unique=True, mysql_length=255)
+Index('my_index', Incidents_Model.gid, unique=True, mysql_length=255)
