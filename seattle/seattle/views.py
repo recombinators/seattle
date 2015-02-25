@@ -41,19 +41,6 @@ def my_view(request):
     return {'one': one, 'project': 'seattle'}
 
 
-@view_config(route_name='one_hundred', renderer='templates/j3_histo.jinja2')
-def one_hundred(request):
-    "Returns JSON object with list of dictionaries."
-    try:
-        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, -122.336072, 47.623636, 0.001))
-        # print 'query: {}\ncount: {}'.format(output, output.count())
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-
-    # Convert sqlalchemy object into list of dictionaries.
-    return {'output': convert_json(output)}
-
-
 @view_config(route_name='MVP', renderer='json')
 def mvp(request):
     "Returns JSON object with all incidents from given lat/long within a set radius."
@@ -84,20 +71,27 @@ def center(request):
 
 @view_config(route_name='histo', renderer='templates/test_histo.jinja2')
 def center(request):
-    "Returns lat/lon params"
+    "Returns lat/lon params as a list."
     lat = 47.623636
     lon = -122.336072
+    radius = 0.001
     try:
-        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
+        output = MyModel.circle_radius(lat, lon, radius)
+        print 'output type: {}'.format(type(output))
+        import pdb; pdb.set_trace()
+        # output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.005))
         # print 'query: {}\ncount: {}'.format(output, output.count())
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     # Convert sqlalchemy object into list of dictionaries.
-    temp_list = convert_json(output)
-    output_list = []
-    for item in temp_list:
-        output_list.append(item['date_time'])
-    return {'output': output_list}
+    # temp_list = convert_json(output)
+
+    date_list = []
+    for item in output:
+
+        date_list.append(epoch_time(item.date_time))
+        # print "xxxx {}".format(epoch_time(item.date_time))
+    return {'output': date_list}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

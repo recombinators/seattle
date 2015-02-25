@@ -42,7 +42,7 @@ class MyModel(Base):
 
     @classmethod
     def circle_radius(cls, lat, lon, radius):
-        return DBSession.query(cls).filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat, radius))
+        return DBSession.query(cls).filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat, radius)).all()
 
     def json(self):
         return {'gid': self.gid,

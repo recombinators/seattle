@@ -30,23 +30,25 @@ body {
 // Generate a log-normal distribution with a median of 30 minutes.
 var values = {{output}};
 var newvalues = [];
+// Converting epoch time in input (in days) to Date
 for (i = 0; i < values.length; i++) { 
     newvalues.push(new Date(values[i]*1000*60*60*24));
 }
 
 var minDate = newvalues[0];
 var maxDate = newvalues[newvalues.length - 1];
+// Number of bins
 var bin_number = Math.floor((maxDate - minDate)/(1000*60*60*24));
 
 // Formatters for counts and times (converting numbers to Dates).
 var formatCount = d3.format(",.0f"),
-    formatTime = d3.time.format("%Y/%m/%d"),
-    formatMinutes = function(d) { return formatTime(new Date(d)); };
 
+// setting actual plot size
 var margin = {top: 10, right: 30, bottom: 30, left: 30},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+// scale for x axis
 var x = d3.time.scale()
     .domain([minDate, maxDate])
     .range([0, width]);
@@ -56,30 +58,32 @@ var data = d3.layout.histogram()
     .bins(x.ticks(bin_number))
     (newvalues);
 
+// scale for y axis
 var y = d3.scale.linear()
+    // finds maximum bin height, and scales the y-axis
+    // d.y is the count
     .domain([0, d3.max(data, function(d) { return d.y; })])
+    // SVG objects plots start start with origin at upper left
     .range([height, 0]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
-    // .tickFormat(formatMinutes);
 
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(4);
-    // .tickFormat(formatMinutes);
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var bar = svg.selectAll(".bar")
     .data(data)
-  .enter().append("g")
+    .enter().append("g")
     .attr("class", "bar")
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
