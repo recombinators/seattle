@@ -18,17 +18,17 @@ gulp.task('build', function () {
         customProperties(),
         customMedia()
     ];
-    return gulp.src('./seattle/seattle/static/css/src/index.css')
+    return gulp.src('seattle/seattle/static/css/src/index.css')
         .pipe(postcss(processors))
         .pipe(gulp.dest('./seattle/seattle/static/css/'))
         .pipe(minify())
         .pipe(rename('index.min.css'))
-        .pipe(gulp.dest('./seattle/seattle/static/css/'))
+        .pipe(gulp.dest('seattle/seattle/static/css/'))
 })
 
 // Re-run build process on changes to CSS
 gulp.task('watch', function () {
-    gulp.watch('./seattle/seattle/css/src/*.css', ['build'])
+    gulp.watch('seattle/seattle/css/src/*.css', ['build'])
 })
 
 // Register default task
