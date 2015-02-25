@@ -8,6 +8,8 @@ CREATE TABLE incidents
   incident_number character varying(50),
   latitude character varying(50),
   longitude character varying(50),
+  major_category character varying(50),
+  minor_category character varying(50),
   the_geom geometry,
   CONSTRAINT incidents_pkey PRIMARY KEY (gid),
   CONSTRAINT enforce_dims_the_geom CHECK (st_ndims(the_geom) = 2),
