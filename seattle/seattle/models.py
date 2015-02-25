@@ -15,7 +15,6 @@ from sqlalchemy.orm import (
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
-import time
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -89,8 +88,22 @@ class Incidents_Model(Base):
         years_prior = (one_year_ago_epoch-list_of_times[0])/365
         incidents_per_year_prior = incidents_prior/years_prior
         incidents_per_year_last_year = incidents_last_year
-        percent = 100*(incidents_per_year_last_year-incidents_per_year_prior)/incidents_per_year_prior
-        return round(percent, 2)
+        percent = (
+            100*(incidents_per_year_last_year-incidents_per_year_prior)
+            / incidents_per_year_prior)
+
+        return_string = ""
+        pos_neg = ""
+        if percent >= 0:
+            pos_neg = ("pos", "increased")
+        else:
+            pos_neg = ("neg", "decreased")
+        return_string = (
+            '<span class="{}">{} {}%</span>'.format(pos_neg[0], pos_neg[1],
+                                                   abs(round(percent, 2)))
+            )
+
+        return return_string
 
 
     def json(self):
@@ -105,6 +118,6 @@ class Incidents_Model(Base):
                 'the_geom': self.the_geom}
 
 
-
 # I don't know what this line is for:
-Index('my_index', Incidents_Model.gid, unique=True, mysql_length=255)
+# Indexing: Let's hold off until we know our queries better
+# Index('my_index', Incidents_Model.gid, unique=True, mysql_length=255)
