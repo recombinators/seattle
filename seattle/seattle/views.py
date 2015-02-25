@@ -47,7 +47,7 @@ def my_view(request):
     return {'one': one, 'project': 'seattle'}
 
 
-@view_config(route_name='one_hundred', renderer='json')
+@view_config(route_name='one_hundred', renderer='templates/radius_test.jinja2')
 def one_hundred(request):
     "Returns JSON object with list of dictionaries."
     try:
