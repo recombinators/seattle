@@ -13,6 +13,7 @@ from .models import (
 import time
 import pytz
 import datetime
+import math
 
 
 def epoch_time(dt):
@@ -42,13 +43,13 @@ def convert_json(query):
     return list_output
 
 
-@view_config(route_name='index', renderer='templates/index.jinja2')
-def my_view(request):
-    try:
-        one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'seattle'}
+# @view_config(route_name='index', renderer='templates/index.jinja2')
+# def my_view(request):
+#     try:
+#         one = DBSession.query(Incidents_Model).filter(Incidents_Model.gid == 378).first()
+#     except DBAPIError:
+#         return Response(conn_err_msg, content_type='text/plain', status_int=500)
+#     return {'one': one, 'project': 'seattle'}
 
 
 @view_config(route_name='center', renderer='json')
@@ -65,8 +66,8 @@ def center(request):
     return {'output': convert_json(output)}
 
 
-@view_config(route_name='major_category',
-             renderer='templates/test_cat.jinja2')
+@view_config(route_name='index',
+             renderer='templates/index.jinja2')
 def major_cat(request):
     """Returns epoch datetime params as a dict with keys for each major type and
     values corresponding to the epoch times."""
@@ -91,6 +92,48 @@ def major_cat(request):
 
 
     return {'lists': output_dict, 'percentages': output_percentages_dict}
+
+@view_config(route_name='line', renderer='templates/test_line.jinja2')
+def line_plot(request):
+    "Returns epoch datetime params as a list."
+    lat = 47.623636
+    lon = -122.336072
+    radius = 0.003
+    try:
+        output = []
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+
+    names = ['fire', 'mvi', 'crime'] #, 'other'
+    output_dict = dict(zip(names, output))
+
+    min_date = min(min(output[0]), min(output[1]), min(output[2]))
+    max_date = max(max(output[0]), max(output[1]), max(output[2]))
+    date_range = max_date - min_date
+    number_months = int(math.ceil(date_range/30))
+    import pdb; pdb.set_trace()
+    days_in_month = 30
+    start_date = min_date
+    date = [start_date]
+
+    months = []
+    for i in range(number_months):
+        months.append(date)
+        date += days_in_month
+    # print(wks)
+
+    count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
+    for k in range(2):
+        for i in output[k]:
+            for j in range(number_months - 1):
+                if i > months[j] and i < months[j+1]:
+                    count[k][j] += 1
+    print(count)
+
+    return {'output': [months[1:], count]}
 
 
 conn_err_msg = """\

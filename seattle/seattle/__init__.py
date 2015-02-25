@@ -20,5 +20,6 @@ def main(global_config, **settings):
     config.add_route('index', '/')
     config.add_route('center', '{lat}/{lon}')
     config.add_route('histo', '/histo')
+    config.add_route('line', 'line')
     config.scan()
     return config.make_wsgi_app()
