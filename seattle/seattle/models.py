@@ -3,6 +3,7 @@ from sqlalchemy import (
     Index,
     Integer,
     Text,
+    func
     )
 import sqlalchemy as sa
 
@@ -30,6 +31,27 @@ class MyModel(Base):
     latitude = sa.Column(sa.UnicodeText, nullable=False)
     longitude = sa.Column(sa.UnicodeText, nullable=False)
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
+
+    @classmethod
+    def by_id(cls, gid):
+        return DBSession.query(cls).filter(cls.gid == gid).one()
+
+    @classmethod
+    def circle_radius(cls, lat, lon, radius):
+        return DBSession.query(cls).filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat, radius))
+
+    def json(self):
+        return {'gid': self.gid,
+                'units': self.units,
+                'date_time': self.date_time,
+                'incident_type': self.incident_type,
+                'address': self.address,
+                'incident_number': self.incident_number,
+                'latitude': self.latitude,
+                'longitude': self.longitude,
+                'the_geom': self.the_geom}
+
+
 
 # I don't know what this line is for:
 Index('my_index', MyModel.gid, unique=True, mysql_length=255)
