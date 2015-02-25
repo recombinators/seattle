@@ -73,7 +73,14 @@ def center(request):
     "Returns lat/lon params"
     lat = request.matchdict.get('lat', None)
     lon = request.matchdict.get('lon', None)
-    return {'lat': lat, 'lon': lon, }
+    try:
+        output = DBSession.query(MyModel).filter(func.ST_Point_Inside_Circle(MyModel.the_geom, lon, lat, 0.001))
+        # print 'query: {}\ncount: {}'.format(output, output.count())
+    except DBAPIError:
+        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+    # Convert sqlalchemy object into list of dictionaries.
+    return {'output': convert_json(output)}
+
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
