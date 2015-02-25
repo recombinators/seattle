@@ -10,6 +10,22 @@ from .models import (
     MyModel,
     )
 
+import datetime
+
+class PST(datetime.tzinfo):
+    """Class defining correct timezone, used in epoch_time."""
+    def utcoffset(self, dt):
+        return datetime.timedelta(hours=-8)
+
+    def dst(self, dt):
+        return datetime.timedelta(0)
+
+def epoch_time(dt):
+    """Method to convert datetime object into epoch time in days."""
+    epoch = datetime.datetime.fromtimestamp(0, PST())
+    # import pdb; pdb.set_trace()
+    delta = dt - epoch
+    return delta.total_seconds()/60/60/24
 
 @view_config(route_name='home', renderer='templates/test.jinja2')
 def my_view(request):
@@ -30,12 +46,11 @@ def one_hundred(request):
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
     list_ = []
     for x in output:
-        del x.__dict__['date_time']
+        """Convert datetime into epoch_time."""
+        x.__dict__['date_time'] = epoch_time(x.__dict__['date_time'])
         del x.__dict__['_sa_instance_state']
         list_.append(x.__dict__)
 
-
-    # import pdb; pdb.set_trace()
     return {'output': list_}
 
 conn_err_msg = """\
