@@ -9,6 +9,7 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 });
 
 function graph() {
+    try {
         dates = [];
         for (i = 0; i < bulk_data[0].length; i++) {
             dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
@@ -147,6 +148,10 @@ function graph() {
             svg.select(".tooltip").remove();
             d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
         })
+    }
+    catch(err) {
+        $(".graph").replaceWith('No data available.')
+    }
 };
 
 window.onload = graph();
