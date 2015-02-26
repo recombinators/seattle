@@ -17,7 +17,7 @@ KEY_FILE = '~/.ssh/seattle_emergency.pem'
 
 # Bookapp CONSTANTS
 HOST = 'ec2-52-10-45-174.us-west-2.compute.amazonaws.com'
-LOCAL_PROJECT_DIR = '~/projects/seattle/seattle/'
+LOCAL_PROJECT_DIR = 'seattle/'
 REMOTE_PROJECT_DIR = '/home/ubuntu/seattle_emergency'
 NGINX_CONFIG = '~/projects/seattle/nginx_config/simple_nginx_config'
 
