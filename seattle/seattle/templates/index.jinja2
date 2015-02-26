@@ -1,194 +1,30 @@
 {% extends 'base.jinja2' %}
 {% block body %}
 
-<header class='ptx'>
+<script>var bulk_data = {{output}}</script>
 
-    <nav class='container center'>
-        <p><a href='/'>Seattle</a></p>
-        <p><a href=''>About</a></p>
-    </nav>
+<nav class='container center'>
+    <p><a href='/'>Seattle</a></p>
+</nav>
 
+<div class='map-container'>
     <div id='map'></div>
-    <script type='text/javascript' src='/static/js/map.js'></script>
-</header>
+</div>
 
 <div class='summary align-center pal'>
-    <p>How <span class='uppercase bold'>Neighborhood</span> has changed <span>in the last year.</span></p>
+    <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
     <ul class='hanging'>
-        <li>Crime has {{percentages.crime|safe}}</li>
-        <li>Fires have {{percentages.fire|safe}}</li>
-        <li>Accidents have {{percentages.mvi|safe}}</li>
+        <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
+        <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
+        <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
     </ul>
 </div>
 
 <div class='visualization container center'>
-    <script src="http://d3js.org/d3.v3.js"></script>
-        <script>
 
-        var margin = {top: 50, right: 40, bottom: 30, left: 50},
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
+    <div class='graph'></div>
 
-        var bulk_data = {{output}}
-        // var vals = [bulk_data[0], bulk_data[1][0]]
-
-        dates = []
-        for (i = 0; i < bulk_data[0].length; i++) { 
-            dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
-        }
-
-
-        data = []
-        for (i = 0; i < bulk_data[0].length; ++i) {
-          data.push({
-            'month': dates[i],
-            'fire': bulk_data[1][0][i],
-            'mvi': bulk_data[1][1][i],
-            'crime': bulk_data[1][2][i]
-          });
-        }
-
-
-
-        // Set the ranges
-        var x = d3.time.scale()
-            .range([0, width]);
-
-        var y = d3.scale.linear()
-            .range([height, 0]);
-
-        // Define the axes
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom")
-            .ticks(5);
-
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left")
-            .ticks(5)
-
-        // Define the lines
-        var fireline = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.month); })
-            .y(function(d) { return y(d.fire); });
-
-        // Define the lines
-        var mviline = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.month); })
-            .y(function(d) { return y(d.mvi); });
-
-        // Define the lines
-        var crimeline = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.month); })
-            .y(function(d) { return y(d.crime); });
-        
-
-        // Adds the svg canvas
-        var svg = d3.select("body")
-            .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-                .attr("transform", 
-                      "translate(" + margin.left + "," + margin.top + ")");
-
-        // Define the focus for the tooltip
-        var focus = svg.append("g") 
-            .style("display", "none");
-
-        // Scale the range of the data
-        x.domain(d3.extent(data, function(d) { return d.month; }));
-        y.domain([0, d3.max(data, function(d) { return d.fire; })]);
-
-        // Add the line paths.
-        svg.append("path")
-            .attr("class", "line")
-            .style("stroke", "red")
-            .attr("d", fireline(data));
-
-        svg.append("path")
-            .attr("class", "line")
-            .style("stroke", "blue")
-            .attr("d", mviline(data));
-
-        svg.append("path")
-            .attr("class", "line")
-            .style("stroke", "green")
-            .attr("d", crimeline(data));
-
-        svg.append("text")
-        .attr("transform", "translate(" + (width/5) + "," + (height/8) + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "red")
-        .text("Fire");
-
-        svg.append("text")
-        .attr("transform", "translate(" + (1.75*width/4) + "," + (height/8) + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "blue")
-        .text("Motor Vehicle Incident");
-
-        svg.append("text")
-        .attr("transform", "translate(" + (4*width/5) + "," + (height/8) + ")")
-        .attr("dy", ".35em")
-        .attr("text-anchor", "start")
-        .style("fill", "green")
-        .text("Crime");
-
-        // Add the X Axis
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        // Add the Y Axis
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "translate(" + width/6 + "," + -height/8 + ")")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Incidents Per Month");
-
-        // append the circle at the intersection 
-        focus.append("circle")
-            .attr("class", "y")
-            .style("fill", "none")
-            .style("stroke", "blue")
-            .attr("r", 4);
-        
-        // append the rectangle to capture mouse
-        svg.append("rect")
-            .attr("width", width)
-            .attr("height", height)
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .on("mouseover", function() { focus.style("display", null); })
-            .on("mouseout", function() { focus.style("display", "none"); })
-            .on("mousemove", mousemove);
-
-        function mousemove() {
-            var x0 = x.invert(d3.mouse(this)[0]),
-                i = bisectDate(data, x0, 1),
-                d0 = data[i - 1],
-                d1 = data[i],
-                d = x0 - d0.month > d1.month - x0 ? d1 : d0;
-
-            focus.select("circle.y")
-                .attr("transform",
-                      "translate(" + x(d.month) + "," +
-                                     y(d.fire) + ")");
-        }
-
-    </script>
 </div>
 
+<script type='text/javascript' src='/static/js/map.js'></script>
 {% endblock %}
