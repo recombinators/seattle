@@ -3,11 +3,11 @@
 
 Table of Contents
 -----------------
-1. [Overview]()
-2. [Data sources]()
-3. [Tools used]()
-4. [Lessons learned]()
-5. [Contributing]()
+1. [Overview](https://github.com/jacquestardie/seattle/blob/master/README.md#overview)
+2. [Data sources](https://github.com/jacquestardie/seattle/blob/master/README.md#data-sources)
+3. [Tools used](https://github.com/jacquestardie/seattle/blob/master/README.md#tools-used)
+4. [Lessons learned](https://github.com/jacquestardie/seattle/blob/master/README.md#lessons-learned)
+5. [Contributing](https://github.com/jacquestardie/seattle/blob/master/README.md#contributing)
 
 
 Overview
@@ -58,6 +58,7 @@ We worked on this for a week. There are no hard and fast rules about what you ca
 __Feedback is welcome and encouraged.__ What did we do right? Wrong? Inefficiently? [Open a ticket](https://github.com/jacquestardie/seattle/issues), give us some advice, and Constantine will send you cupcakes. Promise.
 
 Thanks!
+
 [:older_man:](https://github.com/poolbath1) [:hurtrealbad:](https://github.com/constanthatz) [:bowtie:](https://github.com/bm5w) [:cat:](https://github.com/jqtrde)
 
 
