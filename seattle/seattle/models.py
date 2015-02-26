@@ -62,7 +62,7 @@ class Incidents_Model(Base):
     def cat_circle(cls, lat, lon, major_cat, radius=0.003, limit=1000):
         """Outputs list of incidents filtered by Major Category"""
         return (DBSession.query(cls)
-                .order_by(func.random())
+                # .order_by(func.random())
                 .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
                                                     radius),
                         cls.major_category == major_cat).all()
