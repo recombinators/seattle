@@ -162,7 +162,7 @@ def _intialize_instance():
 def _deploy():
     rsync_project(local_dir=LOCAL_PROJECT_DIR,
                   remote_dir=REMOTE_PROJECT_DIR,
-                  exclude=['*.pyc', 'create_incidents_table.sql', 'create_incidents_point_geom.sql'])
+                  exclude=['*.pyc'])
     sudo('/usr/bin/supervisorctl restart seattle_emergency')
 
 
