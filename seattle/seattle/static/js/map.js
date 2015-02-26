@@ -14,15 +14,15 @@ map.on('moveend', function(e) {
     var lat = center.lat;
     var lng = center.lng;
     console.log(lat, lng);
-
-    // With the AJAX request, we're only able to move once before this errors.
     // IE: Uncaught TypeError: Cannot read property 'lat' of undefined
     $.ajax({
-        url: '/ajax/' + lat + '/' + lng,
-        type: 'POST', // Unsure if necessary. Would GET work?
-        data: center,
-        dataType: 'json'
+        url: "/ajax/",
+        dataType: "json",
+        data: { 'lat_cen': lat, 'lon_cen': lng},
     }).done(function(json) {
+        $(".crime").children().replaceWith(json.percentages.crime)
+        $(".fire").children().replaceWith(json.percentages.fire)
+        $(".accidents").children().replaceWith(json.percentages.mvi)
         console.log('You look great today.');
     });
 
