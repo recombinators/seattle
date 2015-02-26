@@ -165,8 +165,12 @@ def line_plot_lat_long(request):
 def line_plot_lat_long_ajax(request):
     "Returns epoch datetime params as a list."
     lat = request.matchdict.get('lat', 47.623636)
-    print 'lat: {}'.format(lat)
     lon = request.matchdict.get('lon', -122.336072)
+    # Is this possible?
+    # lat = request.matchdict.get('lat', 47.623636)
+    # lon = request.matchdict.get('lon', -122.336072)
+    import pdb; pdb.set_trace()
+    print 'lat: {}'.format(lat)
     print 'lon: {}'.format(lon)
 
     # lat = 47.623636

@@ -11,11 +11,19 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 // On move, recalculate center
 map.on('moveend', function(e) {
     var center = map.getCenter();
+    var lat = center.lat;
+    var lng = center.lng;
+    console.log(lat, lng);
 
-    $.ajax('/', {
-        type: 'POST',
-        data: center
+    // With the AJAX request, we're only able to move once before this errors.
+    // IE: Uncaught TypeError: Cannot read property 'lat' of undefined
+    $.ajax({
+        url: '/ajax/' + lat + '/' + lng,
+        type: 'POST', // Unsure if necessary. Would GET work?
+        data: center,
+        dataType: 'json'
+    }).done(function(json) {
+        console.log('You look great today.');
     });
-    console.log(center);
 
 });

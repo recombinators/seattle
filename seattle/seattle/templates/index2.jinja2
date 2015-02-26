@@ -138,7 +138,7 @@
                 <!-- This is where the map Lat long will go -->
                 url: "/ajax/47.6778/-122.3893",
                 dataType: "json",
-                <!-- data: { id: entry_id, title: title_input, text: text_input }, -->
+                data: { 'lat_cen': map.getCenter().lat, 'lon_cen': map.getCenter().lng},
             }).done(function(json) {
                 // $("article h3").text(json.title);
 

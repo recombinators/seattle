@@ -13,7 +13,7 @@
 </header>
 
 <div class='summary align-center pal'>
-    <p>How <span class='uppercase bold'>Neighborhood</span> has changed <span>in the last year.</span></p>
+    <p>How <span class='uppercase bold neighborhood'>Neighborhood</span> has changed <span>in the last year.</span></p>
     <ul class='hanging'>
         <li>Crime has {{percentages.crime|safe}}</li>
         <li>Fires have {{percentages.fire|safe}}</li>
@@ -22,9 +22,7 @@
 </div>
 
 <div class='visualization container center'>
-    <script src="http://d3js.org/d3.v3.js"></script>
-        <script>
-
+    <script>
         var margin = {top: 50, right: 40, bottom: 30, left: 50},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
@@ -32,11 +30,10 @@
         var bulk_data = {{output}}
         // var vals = [bulk_data[0], bulk_data[1][0]]
 
-        dates = []
+        dates = [];
         for (i = 0; i < bulk_data[0].length; i++) { 
             dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
-        }
-
+        };
 
         data = []
         for (i = 0; i < bulk_data[0].length; ++i) {
@@ -48,11 +45,10 @@
           });
         }
 
-
-
         // Set the ranges
         var x = d3.time.scale()
             .range([0, width]);
+
 
         var y = d3.scale.linear()
             .range([height, 0]);
