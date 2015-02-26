@@ -1,6 +1,8 @@
 {% extends 'base.jinja2' %}
 {% block body %}
-
+<script>
+    var bulk_data = {{output}}
+</script>
 <header class='ptx'>
 
     <nav class='container center'>
@@ -9,7 +11,6 @@
     </nav>
 
     <div id='map'></div>
-    <script type='text/javascript' src='/static/js/map.js'></script>
 </header>
 
 <div class='summary align-center pal'>
@@ -21,147 +22,8 @@
     </ul>
 </div>
 
-<form class="add_entry" id="new">
-<div class="control_row">
-  <input type="submit" value="Share" name="Share" />
+<div class='graph'>
 </div>
-</form>
-
-<div class='visualization container center'>
-    <script src="http://d3js.org/d3.v3.js"></script>
-        <script>
-
-        var bulk_data = {{output}}
-        // var vals = [bulk_data[0], bulk_data[1][0]]
-
-        dates = []
-        for (i = 0; i < bulk_data[0].length; i++) { 
-            dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
-        }
-
-
-        data = []
-        for (i = 0; i < bulk_data[0].length; ++i) {
-          data.push({
-            'month': dates[i],
-            'fire': bulk_data[1][0][i],
-            'mvi': bulk_data[1][1][i],
-            'crime': bulk_data[1][2][i]
-          });
-        }
-
-        var color = d3.scale.category10()
-            .domain(d3.keys(data[0]).filter(function(key) { return key !== 'month'; }));
-
-        var incident_types = color.domain().map(function(name) {
-            return {
-              name: name,
-              values: data.map(function(d) {
-                return {month: d.month, count: +d[name]};
-            })
-          };
-        });
-
-
-        var margin = {top: 20, right: 20, bottom: 30, left: 50},
-            width = 960 - margin.left - margin.right,
-            height = 500 - margin.top - margin.bottom;
-
-        var x = d3.time.scale()
-            .range([0, width])
-            .domain(d3.extent(incident_types, function(d) { return d.month; }));
-
-        var y = d3.scale.linear()
-            .range([height, 0])
-            .domain([0, d3.max(incident_types, function(d) { return d.count; })]);
-
-        var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom");
-
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left");
-
-        var line = d3.svg.line()
-            .interpolate("basis")
-            .x(function(d) { return x(d.month); })
-            .y(function(d) { return y(d.count); });
-
-        var svg = d3.select("body").append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis)
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text("Incidents");
-
-        var incident = svg.selectAll(".incident")
-            .data(incident_types)
-            .enter().append("g")
-            .attr("class", "incident");
-
-        incident.append("path")
-            .attr("class", "line")
-            .attr("d", function(d) { return line(d.values); })
-            .style("stroke", function(d) { return color(d.name); });
-
-        incident.append("text")
-            .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + x(d.value.month) + "," + y(d.value.count) + ")"; })
-            .attr("x", 3)
-            .attr("dy", ".35em")
-            .text(function(d) { return d.name; });
-    </script>
-</div>
-
-<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-
-<div class="ajax">
-    <script>
-        $('#new').submit(function(event) {
-
-            $.ajax({
-                <!-- This is where the map Lat long will go -->
-                url: "/ajax/47.6778/-122.3893",
-                dataType: "json",
-                data: { 'lat_cen': map.getCenter().lat, 'lon_cen': map.getCenter().lng},
-            }).done(function(json) {
-                // $("article h3").text(json.title);
-
-                // $(".hanging").children().remove();
-                // $(".hanging").append("<li>Crime has </li>")
-                $(".crime").replaceWith(json.percentages.crime)
-                $(".fire").replaceWith(json.percentages.fire)
-                $(".accidents").replaceWith(json.percentages.mvi)
-                // $(".hanging").children().add(json.percentages)
-
-
-                // twit.attr('data-text', json.title);
-                // $("article").children().last().after(twit);
-
-                // $("article div.text p").replaceWith(json.text);
-
-                // $("#edit").hide();
-                // $("article").show();
-            });
-        event.preventDefault();
-        })
-    </script>
-</div>
-
+<script type='text/javascript' src='/static/js/map.js'></script>
 
 {% endblock %}

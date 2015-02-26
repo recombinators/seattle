@@ -20,7 +20,7 @@
     "url": "https://github.com/jacquestardie/seattle/issues"
   },
   "homepage": "https://github.com/jacquestardie/seattle",
-  "devDependencies": {
+  "dependencies": {
     "autoprefixer-core": "^5.1.5",
     "gulp": "^3.8.8",
     "gulp-minify-css": "^0.4.5",
@@ -30,8 +30,5 @@
     "postcss-custom-properties": "^3.0.1",
     "postcss-font-variant": "^1.1.0",
     "postcss-import": "^5.0.0"
-  },
-  "dependencies": {
-    "gulp": "^3.8.8"
   }
 }
