@@ -102,7 +102,7 @@ def line_plot(request):
             'percentages': output_percentages_dict}
 
 
-@view_config(route_name='index_lat_long', renderer='templates/index.jinja2')
+@view_config(route_name='index_lat_long', renderer='templates/index2.jinja2')
 def line_plot_lat_long(request):
     "Returns epoch datetime params as a list."
     lat = request.matchdict.get('lat', 47.623636)
