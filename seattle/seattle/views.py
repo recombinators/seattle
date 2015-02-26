@@ -88,15 +88,16 @@ def line_plot(request):
     for i in range(number_months):
         months.append(date)
         date += days_in_month
-    # print(wks)
 
     count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
-    for k in range(2):
+    for k in range(3):
+        print(k)
         for i in output[k]:
             for j in range(number_months - 1):
                 if i > months[j] and i < months[j+1]:
                     count[k][j] += 1
     print(count)
+    print(len(count))
 
     return {'output': [months[1:], count],
             'percentages': output_percentages_dict}
