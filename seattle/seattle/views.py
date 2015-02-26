@@ -158,7 +158,8 @@ def line_plot_lat_long(request):
     # print(count)
 
     return {'output': [months[1:], count],
-            'percentages': output_percentages_dict}
+            'percentages': output_percentages_dict,
+            'lat': lat, 'lon': lon}
 
 
 @view_config(route_name='ajax', renderer='json')
@@ -215,7 +216,8 @@ def line_plot_lat_long_ajax(request):
     # print(count)
 
     return {'output': [months[1:], count],
-            'percentages': output_percentages_dict}
+            'percentages': output_percentages_dict,
+            'lat': lat, 'lon': lon}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
