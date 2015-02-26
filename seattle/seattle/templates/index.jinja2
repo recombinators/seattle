@@ -25,6 +25,24 @@
     <script src="http://d3js.org/d3.v3.js"></script>
         <script>
 
+        var bulk_data = {{output}}
+        // var vals = [bulk_data[0], bulk_data[1][0]]
+
+        dates = []
+        for (i = 0; i < bulk_data[0].length; i++) { 
+            dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
+        }
+
+        data = []
+        for (i = 0; i < bulk_data[0].length; ++i) {
+          data.push({
+            'month': dates[i],
+            'fire': bulk_data[1][0][i],
+            'mvi': bulk_data[1][1][i],
+            'crime': bulk_data[1][2][i]
+          });
+        }
+
         var w = 960,
             h = 500,
             p = [50, 40, 40, 20],
@@ -40,25 +58,6 @@
             .attr("height", h)
             .append("svg:g")
             .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
-
-        var bulk_data = {{output}}
-        // var vals = [bulk_data[0], bulk_data[1][0]]
-
-        dates = []
-        for (i = 0; i < bulk_data[0].length; i++) { 
-            dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
-        }
-
-
-        data = []
-        for (i = 0; i < bulk_data[0].length; ++i) {
-          data.push({
-            'month': dates[i],
-            'fire': bulk_data[1][0][i],
-            'mvi': bulk_data[1][1][i],
-            'crime': bulk_data[1][2][i]
-          });
-        }
 
         // Transpose the data into layers by type.
         var incidents = d3.layout.stack()(["fire", "mvi", "crime"].map(function(incident) {
@@ -143,6 +142,33 @@
             .attr("text-anchor", "start")
             .style("fill", "lightblue")
             .text("Crime");
+
+
+        incident.selectAll("rect")
+        .on("mouseover", function(d){
+            var xPos = parseFloat(d3.select(this).attr("x"));
+            var yPos = parseFloat(d3.select(this).attr("y"));
+            var height = parseFloat(d3.select(this).attr("height"))
+            var coordinatesMouse = d3.mouse(this);
+            var xMouse = coordinatesMouse[0];
+            var yMouse = coordinatesMouse[1];
+                            
+            d3.select(this)
+                .attr("stroke","blue")
+                .attr("stroke-width",0.8)                      
+            
+            svg.append("text")
+                .attr("x",xMouse)
+                .attr("y",yMouse)
+                .attr("class","tooltip")
+                .text(d.y);        
+        })
+        .on("mouseout",function(){
+            svg.select(".tooltip").remove();
+            d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+                                                        
+        })
+
     </script>
 </div>
 
