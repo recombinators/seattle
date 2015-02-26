@@ -11,42 +11,14 @@
 @import 'tables.css';
 @import 'layout.css';
 @import 'flexbox.css';
-@import 'textrotator.css';
 
-
-/* Uncomment and redefine the variables below to change to the generated stylesheet. */
 :root {
-
-	/* TYPOGRAPHY */
-	/* --ms3: ; */
-	/* --ms2: ; */
-	/* --ms1: ; */
-	/* --ms0: ; */
 	--copy-font: fira-sans;
 	--copy-font-weight: 400;
 	--copy-font-color: #444;
-	/* --heading-font: ; */
-	/* --heading-font-color: ; */
-	/* --heading-font-weight: ; */
-	/* --monospace-font: ; */
-	/* --line-height: ; */
-	/* --font-weight-light: ; */
-	/* --font-weight-book:	; */
-	/* --font-weight-medium: ; */
-	/* --font-weight-semibold: ; */
-	/* --font-weight-bold: ; */
-	/* --font-weight-black: ; */
-
-	/* LINKS */
-	/* --link-color: ; */
-	/* --link-color-hover: ; */
-
-	/* LAYOUT */	
-	/* --container-width: ; */
-
 }
 
-header {
+.map-container {
     position: relative;
     height: 50vh;
 }
@@ -56,19 +28,4 @@ header {
     top: 0;
     bottom: 0;
     width: 100%;
-    border-top: 4px solid #f6f6f6;
-    border-bottom: 4px solid #f6f6f6;
-}
-
-.summary {
-    z-index: 1;
-    background: rgba(255,255,255,0.2)
-}
-
-nav {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: baseline;
 }

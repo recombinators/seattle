@@ -8,21 +8,24 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
     attributionControl: false
 });
 
-// Graph script
-
-
 function graph() {
-    var margin = {top: 50, right: 40, bottom: 30, left: 50},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
+    var w = 960,
+        h = 500,
+        p = [50, 40, 40, 20],
+        x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
+        y = d3.scale.linear().range([0, h - p[0] - p[2]]),
+        z = d3.scale.ordinal().range(["lightpink", "darkgray", "lightblue"])
+        yx = d3.scale.linear().range([0, h - p[0] - p[2]]),
+        format = d3.time.format("%b %Y");
 
-    // if (bulk_data.length === 0){
-    //     bulk_data = {{output}};
-    // };
-    // var vals = [bulk_data[0], bulk_data[1][0]]
+    var svg = d3.select(".graph").append("svg:svg")
+        .attr("width", w)
+        .attr("height", h)
+        .append("svg:g")
+        .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
 
     dates = [];
-    for (i = 0; i < bulk_data[0].length; i++) {
+    for (i = 0; i < bulk_data[0].length; i++) { 
         dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
     };
 
@@ -36,115 +39,91 @@ function graph() {
       });
     }
 
-    // Set the ranges
-    var x = d3.time.scale()
-        .range([0, width]);
+    // Transpose the data into layers by type.
+    var incidents = d3.layout.stack()(["fire", "mvi", "crime"].map(function(incident) {
+        return data.map(function(d) {
+          return {x: d.month, y: +d[incident]};
+        });
+    }));
 
-
-    var y = d3.scale.linear()
-        .range([height, 0]);
+    // Compute the x-domain (by date) and y-domain (by top).
+    x.domain(incidents[0].map(function(d) { return d.x; }));
+    y.domain([0, d3.max(incidents[incidents.length - 1], function(d) { return d.y0 + d.y; })]);
+    yx.domain([d3.max(incidents[incidents.length - 1], function(d) { return d.y0 + d.y; }), 0]);
 
     // Define the axes
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(5);
+        .ticks(5)
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(" + 0 + "," + h - p[2] + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .attr("y", 0)
+        .attr("x", 9)
+        .attr("dy", ".35em")
+        .attr("transform", "rotate(90)")
+        .style("text-anchor", "start")
+        .text(format);
 
     var yAxis = d3.svg.axis()
-        .scale(y)
+        .scale(yx)
         .orient("left")
         .ticks(5)
 
-    // Define the lines
-    var fireline = d3.svg.line()
-        .interpolate("basis")
-        .x(function(d) { return x(d.month); })
-        .y(function(d) { return y(d.fire); });
-
-    // Define the lines
-    var mviline = d3.svg.line()
-        .interpolate("basis")
-        .x(function(d) { return x(d.month); })
-        .y(function(d) { return y(d.mvi); });
-
-    // Define the lines
-    var crimeline = d3.svg.line()
-        .interpolate("basis")
-        .x(function(d) { return x(d.month); })
-        .y(function(d) { return y(d.crime); });
-
-
-    // Adds the svg canvas
-    var svg = d3.select(".graph")
-        .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-            .attr("transform",
-                  "translate(" + margin.left + "," + margin.top + ")");
-
-    // Define the focus for the tooltip
-    var focus = svg.append("g")
-        .style("display", "none");
-
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.month; }));
-    y.domain([0, d3.max(data, function(d) { return d.fire; })]);
-
-    // Add the line paths.
-    svg.append("path")
-        .attr("class", "line")
-        .style("stroke", "red")
-        .attr("d", fireline(data));
-
-    svg.append("path")
-        .attr("class", "line")
-        .style("stroke", "blue")
-        .attr("d", mviline(data));
-
-    svg.append("path")
-        .attr("class", "line")
-        .style("stroke", "green")
-        .attr("d", crimeline(data));
-
-    svg.append("text")
-    .attr("transform", "translate(" + (width/5) + "," + (height/8) + ")")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "start")
-    .style("fill", "red")
-    .text("Fire");
-
-    svg.append("text")
-    .attr("transform", "translate(" + (1.75*width/4) + "," + (height/8) + ")")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "start")
-    .style("fill", "blue")
-    .text("Motor Vehicle Incident");
-
-    svg.append("text")
-    .attr("transform", "translate(" + (4*width/5) + "," + (height/8) + ")")
-    .attr("dy", ".35em")
-    .attr("text-anchor", "start")
-    .style("fill", "green")
-    .text("Crime");
-
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-
-    // Add the Y Axis
     svg.append("g")
         .attr("class", "y axis")
+        .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
         .call(yAxis)
-        .append("text")
-        .attr("transform", "translate(" + width/6 + "," + -height/8 + ")")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Incidents Per Month");
+        .selectAll("text")
+        .style("text-anchor", "start")
+
+        
+    // Add a group for each cause.
+    var incident = svg.selectAll("g.incident")
+        .data(incidents)
+        .enter().append("svg:g")
+        .attr("class", "incident")
+        .style("fill", function(d, i) { return z(i); })
+        .style("stroke", function(d, i) { return d3.rgb(z(i)).darker(); });
+
+    // Add a rect for each date.
+    var rect = incident.selectAll("rect")
+        .data(Object)
+        .enter().append("svg:rect")
+        .attr("x", function(d) { return x(d.x); })
+        .attr("y", function(d) { return -y(d.y0) - y(d.y); })
+        .attr("height", function(d) { return y(d.y); })
+        .attr("width", x.rangeBand());
+
+    var legend_x = (w - p[1]*6),
+        legend_y = 4*h/5;
+
+    svg.append("text")
+        .attr("transform", "translate(" + legend_x + "," + -legend_y + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "lightpink")
+        .text("Fire");
+
+    svg.append("text")
+        .attr("transform", "translate(" + legend_x + "," + -(legend_y + 20) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "darkgray")
+        .text("Motor Vehicle Incident");
+
+    svg.append("text")
+        .attr("transform", "translate(" + legend_x + "," + -(legend_y + 40) + ")")
+        .attr("dy", ".35em")
+        .attr("text-anchor", "start")
+        .style("fill", "lightblue")
+        .text("Crime");
 };
+
 window.onload = graph();
 
 // On move, recalculate center
@@ -158,7 +137,6 @@ map.on('moveend', function(e) {
         url: "/ajax/",
         dataType: "json",
         data: { 'lat_cen': lat, 'lon_cen': lng},
-        // success: graph()
     }).done(function(json) {
         $(".crime").children().replaceWith(json.percentages.crime);
         $(".fire").children().replaceWith(json.percentages.fire);
@@ -166,8 +144,6 @@ map.on('moveend', function(e) {
         bulk_data = json.output;
         $(".graph").children().remove()
         graph();
-        console.log('You look great today.');
     });
-
 });
 
