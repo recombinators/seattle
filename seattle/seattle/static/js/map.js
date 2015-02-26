@@ -20,10 +20,13 @@ map.on('moveend', function(e) {
         dataType: "json",
         data: { 'lat_cen': lat, 'lon_cen': lng},
     }).done(function(json) {
-        $(".crime").children().replaceWith(json.percentages.crime)
-        $(".fire").children().replaceWith(json.percentages.fire)
-        $(".accidents").children().replaceWith(json.percentages.mvi)
+        $(".crime").children().replaceWith(json.percentages.crime);
+        $(".fire").children().replaceWith(json.percentages.fire);
+        $(".accidents").children().replaceWith(json.percentages.mvi);
+        bulk_data = json.output;
+        graph();
         console.log('You look great today.');
     });
 
 });
+
