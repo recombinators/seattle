@@ -17,7 +17,7 @@ KEY_FILE = '~/.ssh/seattle_emergency.pem'
 
 # Bookapp CONSTANTS
 HOST = 'ec2-52-10-45-174.us-west-2.compute.amazonaws.com'
-LOCAL_PROJECT_DIR = '~/projects/seattle/project/'
+LOCAL_PROJECT_DIR = '~/projects/seattle/seattle/'
 REMOTE_PROJECT_DIR = '/home/ubuntu/seattle_emergency'
 NGINX_CONFIG = '~/projects/seattle/nginx_config/simple_nginx_config'
 
@@ -162,7 +162,7 @@ def _intialize_instance():
 def _deploy():
     rsync_project(local_dir=LOCAL_PROJECT_DIR,
                   remote_dir=REMOTE_PROJECT_DIR,
-                  exclude=['*.pyc', 'create_incidents_table.sql', 'create_incidents_point_geom.sql'])
+                  exclude=['*.pyc'])
     sudo('/usr/bin/supervisorctl restart seattle_emergency')
 
 
