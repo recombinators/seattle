@@ -66,7 +66,7 @@ class Incidents_Model(Base):
                 .order_by(func.random())
                 .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
                                                     radius),
-                        cls.major_category == major_cat).limit(limit)
+                        cls.major_category == major_cat).all()
                 )
 
     @classmethod
