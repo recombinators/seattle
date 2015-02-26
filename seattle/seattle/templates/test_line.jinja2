@@ -29,21 +29,36 @@ body {
 <script>
 
 var bulk_data = {{output}}
-var values = [bulk_data[0][0], bulk_data[1][0]]
+var values = [bulk_data[0], bulk_data[1][0]]
 
 dates = []
 for (i = 0; i < values[0].length; i++) { 
-    dates.push(new Date(values[0][i]*1000*60*60*24));
+    dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
 }
 
 
 data = []
 for (i = 0; i < values[0].length; ++i) {
   data.push({
-    'week': dates[i],
-    'count': values[1][i]
+    'month': dates[i],
+    'fire': bulk_data[1][0][i],
+    'mvi': bulk_data[1][1][i],
+    'crime': bulk_data[1][2][i]
   });
 }
+
+var color = d3.scale.category10()
+    .domain(d3.keys(data[0]).filter(function(key) { return key !== 'month'; }));
+
+var incident_types = color.domain().map(function(name) {
+    return {
+      name: name,
+      values: data.map(function(d) {
+        return {date: d.date, count: +d[name]};
+    })
+  };
+});
+
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
@@ -51,11 +66,11 @@ var margin = {top: 20, right: 20, bottom: 30, left: 50},
 
 var x = d3.time.scale()
     .range([0, width])
-    .domain(d3.extent(data, function(d) { return d.week; }));
+    .domain(d3.extent(data, function(d) { return d.month; }));
 
 var y = d3.scale.linear()
     .range([height, 0])
-    .domain([0, d3.max(data, function(d) { return d.count; })]);
+    .domain([0, d3.max(data, function(d) { return d.fire; })]);
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -67,8 +82,8 @@ var yAxis = d3.svg.axis()
 
 var line = d3.svg.line()
     .interpolate("basis")
-    .x(function(d) { return x(d.week); })
-    .y(function(d) { return y(d.count); });
+    .x(function(d) { return x(d.month); })
+    .y(function(d) { return y(d.fire); });
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -84,7 +99,7 @@ svg.append("g")
 svg.append("g")
     .attr("class", "y axis")
     .call(yAxis)
-  .append("text")
+    .append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
     .attr("dy", ".71em")

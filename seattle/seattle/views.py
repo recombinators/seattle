@@ -133,7 +133,7 @@ def line_plot(request):
                     count[k][j] += 1
     print(count)
 
-    return {'output': [[months[1:], months[1:], months[1:]], count]}
+    return {'output': [months[1:], count]}
 
 
 conn_err_msg = """\
