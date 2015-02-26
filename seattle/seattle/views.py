@@ -52,7 +52,7 @@ def convert_json(query):
 #     return {'output': convert_json(output)}
 
 
-@view_config(route_name='index', renderer='templates/index3.jinja2')
+@view_config(route_name='index', renderer='templates/index.jinja2')
 def line_plot(request):
     "Returns epoch datetime params as a list."
     lat = 47.623636
