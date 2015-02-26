@@ -52,7 +52,7 @@ def convert_json(query):
 #     return {'output': convert_json(output)}
 
 
-@view_config(route_name='index', renderer='templates/index.jinja2')
+@view_config(route_name='index', renderer='templates/index3.jinja2')
 def line_plot(request):
     "Returns epoch datetime params as a list."
     lat = 47.623636
@@ -147,7 +147,7 @@ def line_plot_lat_long(request):
     # print(wks)
 
     count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
-    for k in range(2):
+    for k in range(3):
         for i in output[k]:
             for j in range(number_months - 1):
                 if i > months[j] and i < months[j+1]:
