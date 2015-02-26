@@ -26,16 +26,16 @@
         <script>
 
         var bulk_data = {{output}}
-        var values = [bulk_data[0], bulk_data[1][0]]
+        // var vals = [bulk_data[0], bulk_data[1][0]]
 
         dates = []
-        for (i = 0; i < values[0].length; i++) { 
+        for (i = 0; i < bulk_data[0].length; i++) { 
             dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
         }
 
 
         data = []
-        for (i = 0; i < values[0].length; ++i) {
+        for (i = 0; i < bulk_data[0].length; ++i) {
           data.push({
             'month': dates[i],
             'fire': bulk_data[1][0][i],
@@ -51,7 +51,7 @@
             return {
               name: name,
               values: data.map(function(d) {
-                return {date: d.date, count: +d[name]};
+                return {month: d.month, count: +d[name]};
             })
           };
         });
@@ -63,11 +63,11 @@
 
         var x = d3.time.scale()
             .range([0, width])
-            .domain(d3.extent(data, function(d) { return d.month; }));
+            .domain(d3.extent(incident_types, function(d) { return d.month; }));
 
         var y = d3.scale.linear()
             .range([height, 0])
-            .domain([0, d3.max(data, function(d) { return d.fire; })]);
+            .domain([0, d3.max(incident_types, function(d) { return d.count; })]);
 
         var xAxis = d3.svg.axis()
             .scale(x)
@@ -80,12 +80,12 @@
         var line = d3.svg.line()
             .interpolate("basis")
             .x(function(d) { return x(d.month); })
-            .y(function(d) { return y(d.fire); });
+            .y(function(d) { return y(d.count); });
 
         var svg = d3.select("body").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-          .append("g")
+            .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         svg.append("g")
@@ -107,6 +107,23 @@
             .datum(data)
             .attr("class", "line")
             .attr("d", line);
+
+        var incident = svg.selectAll(".incident")
+            .data(incident_types)
+            .enter().append("g")
+            .attr("class", "incident");
+
+        incident.append("path")
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d.values); })
+            .style("stroke", function(d) { return color(d.name); });
+
+        incident.append("text")
+            .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
+            .attr("transform", function(d) { return "translate(" + x(d.value.month) + "," + y(d.value.count) + ")"; })
+            .attr("x", 3)
+            .attr("dy", ".35em")
+            .text(function(d) { return d.name; });
     </script>
 </div>
 
