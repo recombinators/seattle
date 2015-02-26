@@ -103,11 +103,6 @@
             .style("text-anchor", "end")
             .text("Incidents");
 
-        svg.append("path")
-            .datum(data)
-            .attr("class", "line")
-            .attr("d", line);
-
         var incident = svg.selectAll(".incident")
             .data(incident_types)
             .enter().append("g")
