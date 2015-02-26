@@ -126,8 +126,11 @@ def line_plot_lat_long(request):
     names = ['fire', 'mvi', 'crime'] #, 'other'
     output_dict = dict(zip(names, output))
     output_percentages = []
+    print "fire: "
     output_percentages.append(Incidents_Model.percentage(output[0]))
+    print "mvi: "
     output_percentages.append(Incidents_Model.percentage(output[1]))
+    print "crime: "
     output_percentages.append(Incidents_Model.percentage(output[2]))
     output_percentages_dict = dict(zip(names, output_percentages))
 
