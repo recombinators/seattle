@@ -10,5 +10,12 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 
 // On move, recalculate center
 map.on('moveend', function(e) {
-    console.log(map.getCenter());
+    var center = map.getCenter();
+
+    $.ajax('/', {
+        type: 'POST',
+        data: center
+    });
+    console.log(center);
+
 });
