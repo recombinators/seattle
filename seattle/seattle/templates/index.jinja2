@@ -85,7 +85,8 @@
             .interpolate("basis")
             .x(function(d) { return x(d.month); })
             .y(function(d) { return y(d.crime); });
-            
+        
+
         // Adds the svg canvas
         var svg = d3.select("body")
             .append("svg")
@@ -93,7 +94,11 @@
                 .attr("height", height + margin.top + margin.bottom)
             .append("g")
                 .attr("transform", 
-                      "translate(" + margin.left + "," + margin.top + ")"); 
+                      "translate(" + margin.left + "," + margin.top + ")");
+
+        // Define the focus for the tooltip
+        var focus = svg.append("g") 
+            .style("display", "none");
 
         // Scale the range of the data
         x.domain(d3.extent(data, function(d) { return d.month; }));
@@ -151,7 +156,38 @@
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text("Incidents Per Month");  
+            .text("Incidents Per Month");
+
+        // append the circle at the intersection 
+        focus.append("circle")
+            .attr("class", "y")
+            .style("fill", "none")
+            .style("stroke", "blue")
+            .attr("r", 4);
+        
+        // append the rectangle to capture mouse
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .on("mouseover", function() { focus.style("display", null); })
+            .on("mouseout", function() { focus.style("display", "none"); })
+            .on("mousemove", mousemove);
+
+        function mousemove() {
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0, 1),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.month > d1.month - x0 ? d1 : d0;
+
+            focus.select("circle.y")
+                .attr("transform",
+                      "translate(" + x(d.month) + "," +
+                                     y(d.fire) + ")");
+        }
+
     </script>
 </div>
 
