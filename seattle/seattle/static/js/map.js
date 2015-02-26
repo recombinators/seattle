@@ -1,21 +1,29 @@
 L.mapbox.accessToken = 'pk.eyJ1IjoiamFjcXVlcyIsImEiOiJuRm9TWGYwIn0.ndryRT8IT0U94pHV6o0yng';
 
+var sw = L.latLng(47.4849, -122.4347),
+    ne = L.latLng(47.7414, -122.2406),
+    bounds = L.latLngBounds(sw, ne);
+
 // Initialize map
 var map = L.mapbox.map('map', 'jacques.la14ofjk', {
     center: [47.6105411, -122.329726],
     zoom: 13,
     zoomControl: false,
-    attributionControl: false
+    attributionControl: false,
+    maxBounds: bounds,
+    maxZoom: 17,
+    minZoom: 12
 });
 
 function graph() {
+    try {
         dates = [];
         for (i = 0; i < bulk_data[0].length; i++) {
             dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
         }
 
 
-        data = []
+        data = [];
         for (i = 0; i < bulk_data[0].length; ++i) {
           data.push({
             'month': dates[i],
@@ -57,7 +65,7 @@ function graph() {
         var xAxis = d3.svg.axis()
             .scale(x)
             .orient("bottom")
-            .ticks(5)
+            .ticks(5);
 
         svg.append("g")
             .attr("class", "x axis")
@@ -74,14 +82,14 @@ function graph() {
         var yAxis = d3.svg.axis()
             .scale(yx)
             .orient("left")
-            .ticks(5)
+            .ticks(5);
 
         svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
             .call(yAxis)
             .selectAll("text")
-            .style("text-anchor", "start")
+            .style("text-anchor", "start");
 
         // Add a group for each cause.
         var incident = svg.selectAll("g.incident")
@@ -147,6 +155,10 @@ function graph() {
             svg.select(".tooltip").remove();
             d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
         })
+    }
+    catch(err) {
+        $(".graph").replaceWith('No data available.')
+    }
 };
 
 window.onload = graph();
@@ -167,7 +179,7 @@ map.on('moveend', function(e) {
         $(".fire").children().replaceWith(json.percentages.fire);
         $(".accidents").children().replaceWith(json.percentages.mvi);
         bulk_data = json.output;
-        $(".graph").children().remove()
+        $(".graph").children().remove();
         graph();
     });
 });
