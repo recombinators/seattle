@@ -15,11 +15,17 @@
 <div class='summary align-center pal'>
     <p>How <span class='uppercase bold'>Neighborhood</span> has changed <span>in the last year.</span></p>
     <ul class='hanging'>
-        <li>Crime has {{percentages.crime|safe}}</li>
-        <li>Fires have {{percentages.fire|safe}}</li>
-        <li>Accidents have {{percentages.mvi|safe}}</li>
+        <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
+        <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
+        <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
     </ul>
 </div>
+
+<form class="add_entry" id="new">
+<div class="control_row">
+  <input type="submit" value="Share" name="Share" />
+</div>
+</form>
 
 <div class='visualization container center'>
     <script src="http://d3js.org/d3.v3.js"></script>
@@ -120,30 +126,42 @@
             .attr("dy", ".35em")
             .text(function(d) { return d.name; });
     </script>
+</div>
 
-    <div class="ajax">
-        <script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+
+<div class="ajax">
+    <script>
+        $('#new').submit(function(event) {
+
             $.ajax({
                 <!-- This is where the map Lat long will go -->
-                url: "ajax/47.632119/-122.348416",
+                url: "/ajax/47.6778/-122.3893",
                 dataType: "json",
                 <!-- data: { id: entry_id, title: title_input, text: text_input }, -->
             }).done(function(json) {
-                $("article h3").text(json.title);
+                // $("article h3").text(json.title);
 
-                $("iframe").remove();
-                twit.attr('data-text', json.title);
-                $("article").children().last().after(twit);
-                twit = $(".twitter-share-button").clone();
-                twttr.widgets.load();
+                // $(".hanging").children().remove();
+                // $(".hanging").append("<li>Crime has </li>")
+                $(".crime").replaceWith(json.percentages.crime)
+                $(".fire").replaceWith(json.percentages.fire)
+                $(".accidents").replaceWith(json.percentages.mvi)
+                // $(".hanging").children().add(json.percentages)
 
-                $("article div.text p").replaceWith(json.text);
 
-                $("#edit").hide();
-                $("article").show();
+                // twit.attr('data-text', json.title);
+                // $("article").children().last().after(twit);
+
+                // $("article div.text p").replaceWith(json.text);
+
+                // $("#edit").hide();
+                // $("article").show();
             });
-        </script>
-    </div>
+        event.preventDefault();
+        })
+    </script>
 </div>
+
 
 {% endblock %}
