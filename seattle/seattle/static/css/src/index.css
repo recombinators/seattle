@@ -29,3 +29,10 @@
     bottom: 0;
     width: 100%;
 }
+
+.reticle {
+    position: absolute;
+    top: 49%;
+    left: 49%;
+    z-index: 100;
+}
