@@ -66,34 +66,34 @@ def center(request):
     return {'output': convert_json(output)}
 
 
-@view_config(route_name='index',
-             renderer='templates/index.jinja2')
-def mvp_v1(request):
-    """Returns epoch datetime params as a dict with keys for each major type and
-    values corresponding to the epoch times."""
-    lat = 47.609907
-    lon = -122.337779
-    radius = 0.005
-    try:
-        output = []
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
-        # output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Other', radius)))
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    names = ['fire', 'mvi', 'crime'] #, 'other'
-    output_dict = dict(zip(names, output))
-    output_percentages = []
-    output_percentages.append(Incidents_Model.percentage(output[0]))
-    output_percentages.append(Incidents_Model.percentage(output[1]))
-    output_percentages.append(Incidents_Model.percentage(output[2]))
-    output_percentages_dict = dict(zip(names, output_percentages))
+# @view_config(route_name='index',
+#              renderer='templates/index.jinja2')
+# def mvp_v1(request):
+#     """Returns epoch datetime params as a dict with keys for each major type and
+#     values corresponding to the epoch times."""
+#     lat = 47.609907
+#     lon = -122.337779
+#     radius = 0.005
+#     try:
+#         output = []
+#         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
+#         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
+#         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+#         # output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Other', radius)))
+#     except DBAPIError:
+#         return Response(conn_err_msg, content_type='text/plain', status_int=500)
+#     names = ['fire', 'mvi', 'crime'] #, 'other'
+#     output_dict = dict(zip(names, output))
+#     output_percentages = []
+#     output_percentages.append(Incidents_Model.percentage(output[0]))
+#     output_percentages.append(Incidents_Model.percentage(output[1]))
+#     output_percentages.append(Incidents_Model.percentage(output[2]))
+#     output_percentages_dict = dict(zip(names, output_percentages))
 
 
-    return {'lists': output_dict, 'percentages': output_percentages_dict}
+#     return {'lists': output_dict, 'percentages': output_percentages_dict}
 
-@view_config(route_name='line', renderer='templates/test_line.jinja2')
+@view_config(route_name='index', renderer='templates/index.jinja2')
 def line_plot(request):
     "Returns epoch datetime params as a list."
     lat = 47.623636
@@ -109,6 +109,11 @@ def line_plot(request):
 
     names = ['fire', 'mvi', 'crime'] #, 'other'
     output_dict = dict(zip(names, output))
+    output_percentages = []
+    output_percentages.append(Incidents_Model.percentage(output[0]))
+    output_percentages.append(Incidents_Model.percentage(output[1]))
+    output_percentages.append(Incidents_Model.percentage(output[2]))
+    output_percentages_dict = dict(zip(names, output_percentages))
 
     min_date = min(min(output[0]), min(output[1]), min(output[2]))
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
@@ -133,7 +138,8 @@ def line_plot(request):
                     count[k][j] += 1
     print(count)
 
-    return {'output': [months[1:], count]}
+    return {'output': [months[1:], count],
+            'percentages': output_percentages_dict}
 
 
 conn_err_msg = """\
