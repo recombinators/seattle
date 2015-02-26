@@ -66,17 +66,15 @@ class Incidents_Model(Base):
                 .order_by(func.random())
                 .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
                                                     radius),
-                        cls.major_category == major_cat)
-                .limit(limit)
+                        cls.major_category == major_cat).limit(limit)
                 )
 
     @classmethod
     def percentage(cls, list_of_times):
         """Given a list of times in epoch time, return the percentage increase over the last year."""
-        # current epoch time in days
-        # current_epoch_time = time.time()/60/60/24
         one_year_ago_epoch = list_of_times[-1]-365
         length_list = len(list_of_times)
+        print "length: {}".format(length_list)
         incidents_prior = 0
         for time in list_of_times:
             if time < one_year_ago_epoch:

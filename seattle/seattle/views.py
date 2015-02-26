@@ -101,9 +101,11 @@ def line_plot(request):
     radius = 0.003
     try:
         output = []
+        start_time = time.time()
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+        print 'time to call db for initial query: {}'.format(time.time()-start_time)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
 
@@ -119,7 +121,6 @@ def line_plot(request):
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
     date_range = max_date - min_date
     number_months = int(math.ceil(date_range/30))
-    # import pdb; pdb.set_trace()
     days_in_month = 30
     start_date = min_date
     date = start_date
