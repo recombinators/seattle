@@ -105,9 +105,14 @@ def line_plot(request):
 @view_config(route_name='index_lat_long', renderer='templates/index.jinja2')
 def line_plot_lat_long(request):
     "Returns epoch datetime params as a list."
-    lat = 47.623636
-    lon = -122.336072
-    radius = 0.003
+    lat = request.matchdict.get('lat', 47.623636)
+    print 'lat: {}'.format(lat)
+    lon = request.matchdict.get('lon', -122.336072)
+    print 'lon: {}'.format(lon)
+
+    # lat = 47.623636
+    # lon = -122.336072
+    radius = 0.01
     try:
         output = []
         start_time = time.time()
@@ -146,7 +151,7 @@ def line_plot_lat_long(request):
             for j in range(number_months - 1):
                 if i > months[j] and i < months[j+1]:
                     count[k][j] += 1
-    print(count)
+    # print(count)
 
     return {'output': [months[1:], count],
             'percentages': output_percentages_dict}
