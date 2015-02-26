@@ -19,6 +19,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('index', '/')
     config.add_route('index_lat_long', '{lat}/{lon}')
+    config.add_route('ajax', 'ajax/{lat}/{lon}')
     # config.add_route('histo', '/histo')
     # config.add_route('line', 'line')
     config.scan()
