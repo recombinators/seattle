@@ -69,7 +69,7 @@ def line_plot_lat_long_ajax(request):
         temp = Incidents_Model.percentage(output[i])
         output_percentages[incident_types[i]] = temp['string']
         output_count[incident_types[i]] = temp['year_count']
-        output_compare.append({'type': incident_types[i], 'prior': temp['prior_rate'], 'oneyear': temp['year_count']})
+        output_compare.append({'types': incident_types[i], 'prior': temp['prior_rate'], 'oneyear': temp['year_count']})
         # print '{} count: {}'.format(incident_types[i], temp['year_count'])
 
     # Generate data for graph

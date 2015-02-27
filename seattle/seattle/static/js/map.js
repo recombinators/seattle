@@ -136,14 +136,14 @@ function groupedbar() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var incidentNames = d3.keys(data[0]).filter(function(key) { return key !== "type"; });
+    var incidentNames = d3.keys(compare_data[0]).filter(function(key) { return key !== "types"; });
     
     compare_data.forEach(function(d) {
         d.incidents = incidentNames.map(function(name) { return {name: name, value: +d[name]}; });
     });
 
 
-    x0.domain(compare_data.map(function(d) { return d.State; }));
+    x0.domain(compare_data.map(function(d) { return d.types; }));
     x1.domain(incidentNames).rangeRoundBands([0, x0.rangeBand()]);
     y.domain([0, d3.max(compare_data, function(d) { return d3.max(d.incidents, function(d) { return d.value; }); })]);
 
@@ -162,19 +162,18 @@ function groupedbar() {
         .style("text-anchor", "end")
         .text("Incidents/Year");
 
-    var type = svg.selectAll(".type")
+    var types = svg.selectAll(".types")
         .data(compare_data)
         .enter().append("g")
         .attr("class", "g")
-        // .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; });
+        .attr("transform", function(d) { return "translate(" + x0(d.types) + ",0)"; });
 
-    type.selectAll("rect")
+    types.selectAll("rect")
         .data(function(d) { return d.incidents; })
         .enter().append("rect")
         .attr("width", x1.rangeBand())
         .attr("x", function(d) { return x1(d.name); })
-        // .attr("y", function(d) { return y(d.name); })
-        .attr("transform", "translate(0," + height/2 + ")" )
+        .attr("y", function(d) { return y(d.value); })
         .attr("height", function(d) { return height - y(d.value); })
         .style("fill", function(d) { return color(d.name); });
 }
