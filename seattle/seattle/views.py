@@ -31,27 +31,24 @@ def line_plot(request):
     "Returns epoch datetime params as a list."
     lat = 47.623636
     lon = -122.336072
-    radius = 0.003
+    radius = 0.005
+
     try:
+        incident_types = ['Fire', 'MVI', 'Crime']
         output = []
         start_time = time.time()
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+        for inc_type in incident_types:
+            output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
         print 'time to call db for initial query: {}'.format(time.time()-start_time)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
-
-    names = ['fire', 'mvi', 'crime'] #, 'other'
-    output_dict = dict(zip(names, output))
-    output_percentages = []
-    print "fire: "
-    output_percentages.append(Incidents_Model.percentage(output[0]))
-    print "mvi: "
-    output_percentages.append(Incidents_Model.percentage(output[1]))
-    print "crime: "
-    output_percentages.append(Incidents_Model.percentage(output[2]))
-    output_percentages_dict = dict(zip(names, output_percentages))
+    output_percentages = {}
+    output_count = {}
+    for i in range(3):
+        print '{} count: '.format(incident_types[i])
+        temp = Incidents_Model.percentage(output[i])
+        output_percentages[incident_types[i]] = temp['string']
+        output_count[incident_types[i]] = temp['year_count']
 
     min_date = min(min(output[0]), min(output[1]), min(output[2]))
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
@@ -74,7 +71,8 @@ def line_plot(request):
                     count[k][j] += 1
 
     return {'output': [months[1:], count],
-            'percentages': output_percentages_dict,
+            'percentages': output_percentages,
+            'counts': output_count,
             'lat': lat, 'lon': lon}
 
 
@@ -85,14 +83,14 @@ def line_plot_lat_long_ajax(request):
     lon = request.params.get('lon_cen', -122.336072)
     print 'lat: {}'.format(lat)
     print 'lon: {}'.format(lon)
+    radius = 0.005
 
-    radius = 0.01
     try:
+        incident_types = ['MVI', 'Fire', 'Crime']
         output = []
         start_time = time.time()
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
+        for inc_type in incident_types:
+            output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
         print 'time to call db for initial query: {}'.format(time.time()-start_time)
     except DBAPIError:
         return Response(conn_err_msg, content_type='text/plain', status_int=500)
@@ -100,9 +98,9 @@ def line_plot_lat_long_ajax(request):
     names = ['fire', 'mvi', 'crime'] #, 'other'
     output_dict = dict(zip(names, output))
     output_percentages = []
-    output_percentages.append(Incidents_Model.percentage(output[0]))
-    output_percentages.append(Incidents_Model.percentage(output[1]))
-    output_percentages.append(Incidents_Model.percentage(output[2]))
+    output_percentages.append(Incidents_Model.percentage(output[0])['string'])
+    output_percentages.append(Incidents_Model.percentage(output[1])['string'])
+    output_percentages.append(Incidents_Model.percentage(output[2])['string'])
     output_percentages_dict = dict(zip(names, output_percentages))
 
     try:

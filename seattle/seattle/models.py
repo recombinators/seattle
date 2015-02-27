@@ -98,11 +98,12 @@ class Incidents_Model(Base):
                 pos_neg = ("neg", "decreased")
             return_string = (
                 '<span class="{}">{} {}%</span>'.format(pos_neg[0], pos_neg[1],
-                                                       abs(round(percent, 2)))
+                                                        abs(round(percent, 2)))
                 )
         except:
-            return_string = '<span class="no_change">---- 0.00%</span>'
-        return return_string
+            return_string = '<span class="no_change">---- 0.00%   </span>'
+            incidents_last_year = 0
+        return {'string': return_string, 'year_count': incidents_last_year}
 
 
     def json(self):
