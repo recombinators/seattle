@@ -1,37 +1,49 @@
 {% extends 'base.jinja2' %}
 {% block body %}
 
-<nav class='container center'>
-    <p><a href='/'>Seattle</a></p>
-</nav>
-
 <div class='map-container'>
     <div id='map'>
         <span class='reticle bold red h3'>o</span>
     </div>
+</div>
 
-    <div class='content'>
-        <h1><a href='/'>Seattle</a></h1>
+<div class='content'>
+    <header class='pvx container'>
+        <a href='/' class='fc'>
+            <img class='display-inline' src='/static/img/logo.svg' />
+            <h1 class='display-inline title'>Seamergency!!!</h1>
+        </a>
+    </header>
 
-        <section id='summary' class='pal'>
-            <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
-            <ul class='hanging'>
-                <li>Crime has <span class='crime'>{{percentages.Crime|safe}}</span> Number in last year: {{counts.Crime}}</li>
-                <li>Fires have <span class='fire'>{{percentages.Fire|safe}}</span> Number in last year: {{counts.Fire}}</li>
-                <li>Accidents have <span class='accidents'>{{percentages.MVI|safe}} Number in last year: </span>{{counts.MVI}}</li>
-            </ul>
-        </section>
+    <section id='summary fc'>
+        <div class='fi'>
+            <p>In the last year, in <span class='uppercase bold neighborhood'>
+                    <span class='neigh'>{{neigh}}</span>,
+                    <span class='lat'>{{lat}}</span>, 
+                    <span class='lon'>{{lon}}</span></span>.</p>
+        </div>
+        <ul class='fi hanging'>
+            <li>Crime has <span class='bold crime'>{{percentages.Crime|safe}}</span>: Number in last year: <span class="crime_count">{{ counts.Crime }}</span></li>
+            <li>Fires have <span class='bold fire'>{{percentages.Fire|safe}}</span>: Number in last year: <span class="fire_count">{{ counts.Fire }}</span></li>
+            <li>Incidents have <span class='bold accidents'>{{percentages.MVI|safe}}</span>: Number in last year: <span class="accidents_count">{{ counts.MVI }}</span></li>
+            <li>Total records: <span class='count'>{{count}}</span></li>
+        </ul>
+    </section>
 
-        <section id='visualization' class='container'>
-            <div class='graph'></div>
-        </section>
+    <section id='visualization'>
+        <!-- <h2>Visualize</h2> -->
+        <div class='graph'></div>
+    </section>
 
-        <!-- <section id='points-on-a-map' class='container'> -->
+    <!-- <section id='overview' class='pvl'> -->
+        <!--     <h2>Overview</h2> -->
+        <!--     <p>Find out things.</p> -->
         <!-- </section> -->
 
-        <footer>
-            <p>No!</p>
-        </footer>
 
-    </div>
+
+    <!-- <section id='points-on-a-map' class='container'> -->
+        <!-- </section> -->
+
+</div>
 {% endblock %}

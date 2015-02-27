@@ -13,6 +13,7 @@
         <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
         <!-- D3 -->
         <script src="http://d3js.org/d3.v3.js"></script>
+        <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
         <!-- Jquery -->
         <script src='https://code.jquery.com/jquery-2.1.3.min.js'></script>
         <!-- Local styles -->
@@ -20,10 +21,10 @@
     </head>
 
     <body>
-        <script>var data = {{output}}</script>
+        
 
         {% block body %}{% endblock %}
-
+        <script>var data = {{output|safe}}</script>
         <!-- All the JS -->
         <script type='text/javascript' src='/static/js/map.js'></script>
         <!-- Webfonts via TypeKit -->
