@@ -1,8 +1,9 @@
+#from contextlib import closing
 #import unittest
-import transaction
+#import transaction
 
-from pyramid_sqlalchemy.testing import DatabaseTestCase
-from pyramid import testing
+#from pyramid_sqlalchemy.testing import DatabaseTestCase
+#from pyramid import testing
 
 from models import DBSession, Incidents_Model
 from views import line_plot, line_plot_lat_long_ajax
@@ -10,30 +11,36 @@ from views import line_plot, line_plot_lat_long_ajax
 import pytest
 
 
-class ViewIntegrationTests(DatabaseTestCase):
-    def setUp(self):
-        super(ViewIntegrationTests, self).setUp()
-        self.config = testing.setUP()
-        self.config.include('myapp')
-
-    def tearDown(self):
-        testing.tearDown()
-        super(ViewIntegrationTests, self).tearDown()
+TEST_DSN = 'dbname=seattle_test user=Joel'
 
 
-@pytest.fixture
-def pyramid_req():
-    return testing.DummyRequest()
+def test_foo(sql_session):
+    import pdb; pdb.set_trace()
+    model = Incidents_Model.by_gid(123, sql_session)
+    assert False
+
+#class ViewIntegrationTests(DatabaseTestCase):
+#    def setUp(self):
+#        super(ViewIntegrationTests, self).setUp()
+#        self.config = testing.setUp()
+#
+#    def test_cat_circle(sql_session):
+#        lat = 47.623636
+#        lon = -122.336072
+#        radius = 0.1
+#        result = Incidents_Model.cat_circle(lat, lon, 'Fire', radius, limit=5)
+#        print result
+#
+#    def tearDown(self):
+#        testing.tearDown()
+#        super(ViewIntegrationTests, self).tearDown()
+#
+#
+#@pytest.fixture
+#def pyramid_req():
+#    return testing.DummyRequest()
 
 
-class TestModel:
-    @pytest.fixture()
-    def test_cat_circle():
-        lat = 47.623636
-        lon = -122.336072
-        radius = 0.003
-        result = Incidents_Model.cat_circle(lat, lon, 'Fire', radius, limit=5)
-        print result
 
 #def test_line_plot_lat_long_returns_correctly(request):
 #    response = line_plot(pyramid_req)
