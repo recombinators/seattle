@@ -1,8 +1,6 @@
 {% extends 'base.jinja2' %}
 {% block body %}
 
-<script>var data = {{output}}</script>
-
 <nav class='container center'>
     <p><a href='/'>Seattle</a></p>
 </nav>
@@ -11,22 +9,29 @@
     <div id='map'>
         <span class='reticle bold red h3'>o</span>
     </div>
-</div>
 
-<div class='summary align-center pal'>
-    <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
-    <ul class='hanging'>
-        <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
-        <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
-        <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
-    </ul>
-</div>
+    <div class='content'>
+        <h1><a href='/'>Seattle</a></h1>
 
-<div class='visualization container center'>
+        <section id='summary' class='pal'>
+            <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
+            <ul class='hanging'>
+                <li>Crime has <span class='crime'>{{percentages.Crime|safe}}</span> Number in last year: {{counts.Crime}}</li>
+                <li>Fires have <span class='fire'>{{percentages.Fire|safe}}</span> Number in last year: {{counts.Fire}}</li>
+                <li>Accidents have <span class='accidents'>{{percentages.MVI|safe}} Number in last year: </span>{{counts.MVI}}</li>
+            </ul>
+        </section>
 
-    <div class='graph'></div>
+        <section id='visualization' class='container'>
+            <div class='graph'></div>
+        </section>
 
-</div>
+        <!-- <section id='points-on-a-map' class='container'> -->
+        <!-- </section> -->
 
-<script type='text/javascript' src='/static/js/map.js'></script>
+        <footer>
+            <p>No!</p>
+        </footer>
+
+    </div>
 {% endblock %}
