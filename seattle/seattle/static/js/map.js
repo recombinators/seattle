@@ -8,12 +8,15 @@ var sw = L.latLng(47.4849, -122.4347),
 var map = L.mapbox.map('map', 'jacques.la14ofjk', {
     center: [47.6105411, -122.329726],
     zoom: 13,
-    zoomControl: false,
     attributionControl: false,
     maxBounds: bounds,
     maxZoom: 17,
     minZoom: 12
 });
+
+// Disable scrollwheel zoom
+map.scrollWheelZoom.disable();
+
 
 function graph() {
     try {

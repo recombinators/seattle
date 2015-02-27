@@ -13,9 +13,9 @@
 @import 'flexbox.css';
 
 :root {
-	--copy-font: fira-sans;
-	--copy-font-weight: 400;
-	--copy-font-color: #444;
+    --copy-font: fira-sans;
+    --copy-font-weight: 400;
+    --copy-font-color: #444;
 }
 
 .map-container {
@@ -28,4 +28,37 @@
     top: 0;
     bottom: 0;
     width: 100%;
+}
+
+.reticle {
+    position: absolute;
+    top: 49%;
+    left: 49%;
+    z-index: 100;
+}
+
+.axis { font-size: .25em; }
+.y { font-size: 1em; }
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 10px;
+}
+
+.tooltip{
+    text-anchor: middle;
+    font-family: sans-serif;
+    font-size: 75px;
+    fill:black; 
 }

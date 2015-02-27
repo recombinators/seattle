@@ -1,30 +1,33 @@
 {% extends 'base.jinja2' %}
 {% block body %}
+    <div class='map-container'>
+        <div id='map'>
+            <span class='reticle bold red h3'>o</span>
+        </div>
+    </div>
 
-<script>var bulk_data = {{output}}</script>
+    <div class='content'>
+        <h1><a href='/'>Seattle</a></h1>
 
-<nav class='container center'>
-    <p><a href='/'>Seattle</a></p>
-</nav>
+        <section id='summary' class='pal'>
+            <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
+            <ul class='hanging'>
+                <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
+                <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
+                <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
+            </ul>
+        </section>
 
-<div class='map-container'>
-    <div id='map'></div>
-</div>
+        <section id='visualization' class='container'>
+            <div class='graph'></div>
+        </section>
 
-<div class='summary align-center pal'>
-    <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
-    <ul class='hanging'>
-        <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
-        <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
-        <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
-    </ul>
-</div>
+        <!-- <section id='points-on-a-map' class='container'> -->
+        <!-- </section> -->
 
-<div class='visualization container center'>
+        <footer>
+            <p>No!</p>
+        </footer>
 
-    <div class='graph'></div>
-
-</div>
-
-<script type='text/javascript' src='/static/js/map.js'></script>
+    </div>
 {% endblock %}
