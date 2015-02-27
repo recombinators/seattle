@@ -21,7 +21,7 @@ map.scrollWheelZoom.disable();
 function graph() {
     dates = [];
     for (i = 0; i < data.length; i++) {
-        data[i]['month'] = new Date(data[i]['month']*1000*60*60*24);
+        data[i].month = new Date(data[i].month*1000*60*60*24);
     }
 
     var w = 960,
