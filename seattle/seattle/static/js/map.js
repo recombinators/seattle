@@ -17,7 +17,6 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 // Disable scrollwheel zoom
 map.scrollWheelZoom.disable();
 
-
 // Define stacked bar chart
 function graph() {
     try {
@@ -38,7 +37,8 @@ function graph() {
 
         var w = 960,
             h = 500,
-            p = [50, 40, 40, 20],
+            // p = [50, 40, 40, 20],
+            p = [0, 0, 0, 0],
             x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
             y = d3.scale.linear().range([0, h - p[0] - p[2]]),
             z = d3.scale.ordinal().range(["#FDE668", "#FFBE1A", "#E09200"])
@@ -78,28 +78,28 @@ function graph() {
             .ticks(d3.time.year, 5)
             .tickFormat(d3.time.format('%Y'));
 
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(" + 0 + "," + h - p[2] + ")")
-            .call(xAxis)
-            .selectAll("text")
-        //     .attr("y", 0)
-            .attr("x", 9)
-        //     // .attr("dy", ".35em")
-            .attr("transform", "rotate(90)")
-            .style("text-anchor", "start");
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(" + 0 + "," + h - p[2] + ")")
+        //     .call(xAxis)
+        //     .selectAll("text")
+        // //     .attr("y", 0)
+        //     .attr("x", 9)
+        // //     // .attr("dy", ".35em")
+        //     .attr("transform", "rotate(90)")
+        //     .style("text-anchor", "start");
 
         var yAxis = d3.svg.axis()
             .scale(yx)
             .orient("left")
             .ticks(5);
 
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
-            .call(yAxis)
-            .selectAll("text")
-            .style("text-anchor", "start");
+        // svg.append("g")
+        //     .attr("class", "y axis")
+        //     .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
+        //     .call(yAxis)
+        //     .selectAll("text")
+        //     .style("text-anchor", "start");
 
         // Add a group for each cause.
         var incident = svg.selectAll("g.incident")
@@ -141,6 +141,8 @@ map.on('moveend', function(e) {
         $(".crime").children().replaceWith(json.percentages.crime);
         $(".fire").children().replaceWith(json.percentages.fire);
         $(".accidents").children().replaceWith(json.percentages.mvi);
+        $(".lat").replaceWith(json.lat);
+        $(".lon").replaceWith(json.lon);
         bulk_data = json.output;
         $(".graph").children().remove();
         graph();

@@ -7,27 +7,41 @@
     </div>
 
     <div class='content'>
-        <h1><a href='/'>Seattle</a></h1>
 
-        <section id='summary' class='pal'>
-            <p>How <span class='uppercase bold neighborhood'>{{lat}}, {{lon}}</span> has changed <span>in the last year.</span></p>
-            <ul class='hanging'>
-                <li>Crime has <span class='crime'>{{percentages.crime|safe}}</span></li>
-                <li>Fires have <span class='fire'>{{percentages.fire|safe}}</span></li>
-                <li>Accidents have <span class='accidents'>{{percentages.mvi|safe}}</span></li>
+        <header class='pvx container'>
+            <a href='/' class='fc'>
+                <img class='display-inline' src='/static/img/logo.svg' />
+                <h1 class='display-inline title'>Seamergency!!!</h1>
+            </a>
+        </header>
+
+        <section id='summary fc'>
+            <div class='fi'>
+                <p>In the last year, near <span class='uppercase bold neighborhood'>
+                    <span class='lat'>{{lat}}</span>, 
+                    <span class='lon'>{{lon}}</span></span>.</p>
+            </div>
+            <ul class='fi hanging'>
+                <li>Crime has <span class='bold crime'>{{percentages.crime|safe}}</span></li>
+                <li>Fires have <span class='bold fire'>{{percentages.fire|safe}}</span></li>
+                <li>Incidents have <span class='bold accidents'>{{percentages.mvi|safe}}</span></li>
             </ul>
         </section>
 
-        <section id='visualization' class='container'>
+        <section id='visualization'>
+            <!-- <h2>Visualize</h2> -->
             <div class='graph'></div>
         </section>
 
-        <!-- <section id='points-on-a-map' class='container'> -->
+        <!-- <section id='overview' class='pvl'> -->
+        <!--     <h2>Overview</h2> -->
+        <!--     <p>Find out things.</p> -->
         <!-- </section> -->
 
-        <footer>
-            <p>No!</p>
-        </footer>
+
+
+        <!-- <section id='points-on-a-map' class='container'> -->
+        <!-- </section> -->
 
     </div>
 {% endblock %}
