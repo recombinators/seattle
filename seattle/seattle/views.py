@@ -88,7 +88,7 @@ def line_plot_lat_long_ajax(request):
     except ValueError:
         data = []
 
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     return {'output': data,
             'percentages': output_percentages,
             'compare': output_compare,
