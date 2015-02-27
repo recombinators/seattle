@@ -33,30 +33,30 @@ class Incidents_Model(Base):
     minor_category = sa.Column(sa.UnicodeText, nullable=False)
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
-    @classmethod
-    def by_gid(cls, gid):
-        return DBSession.query(cls).filter(cls.gid == gid).one()
+    # @classmethod
+    # def by_gid(cls, gid):
+    #     return DBSession.query(cls).filter(cls.gid == gid).one()
 
-    @classmethod
-    def by_incident_type(cls, incident_type):
-        return (DBSession.query(cls).filter(cls.incident_type == incident_type)
-                .all())
+    # @classmethod
+    # def by_incident_type(cls, incident_type):
+    #     return (DBSession.query(cls).filter(cls.incident_type == incident_type)
+    #             .all())
 
-    @classmethod
-    def circle_radius(cls, lat, lon, radius):
-        return (DBSession.query(cls)
-                .filter(func.ST_Point_Inside_Circle(cls.the_geom,
-                                                    lon, lat, radius)).all()
-                )
+    # @classmethod
+    # def circle_radius(cls, lat, lon, radius):
+    #     return (DBSession.query(cls)
+    #             .filter(func.ST_Point_Inside_Circle(cls.the_geom,
+    #                                                 lon, lat, radius)).all()
+    #             )
 
-    @classmethod
-    def random_circle(cls, lat, lon, radius, limit):
-        """Outputs random entries from a given radius, with limited number."""
-        return (DBSession.query(cls)
-                .order_by(func.random())
-                .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
-                                                    radius)).limit(limit)
-                )
+    # @classmethod
+    # def random_circle(cls, lat, lon, radius, limit):
+    #     """Outputs random entries from a given radius, with limited number."""
+    #     return (DBSession.query(cls)
+    #             .order_by(func.random())
+    #             .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
+    #                                                 radius)).limit(limit)
+    #             )
 
     @classmethod
     def cat_circle(cls, lat, lon, major_cat, radius=0.003, limit=1000):
@@ -70,11 +70,15 @@ class Incidents_Model(Base):
 
     @classmethod
     def percentage(cls, list_of_times):
-        """Given a list of times in epoch time, return the percentage increase over the last year."""
+        """Given a list of epoch times, return a dict with percent increase
+        as HTML and the number of incidents, over the last year."""
         try:
+            # Define one year ago as 365 days before the most recent incident
             one_year_ago_epoch = list_of_times[-1]-365
             length_list = len(list_of_times)
             # print "length: {}".format(length_list)
+
+            # Count number of incidents before one year ago.
             incidents_prior = 0
             for time in list_of_times:
                 if time < one_year_ago_epoch:
@@ -90,8 +94,6 @@ class Incidents_Model(Base):
                 100*(incidents_per_year_last_year-incidents_per_year_prior)
                 / incidents_per_year_prior)
 
-            return_string = ""
-            pos_neg = ""
             if percent >= 0:
                 pos_neg = ("pos", "increased")
             else:
