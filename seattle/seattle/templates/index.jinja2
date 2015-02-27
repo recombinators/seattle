@@ -1,49 +1,83 @@
 {% extends 'base.jinja2' %}
 {% block body %}
 
+
+<header class='no-desktop'>
+    <a href='/' class='title'>
+        <img class='display-inline' src='/static/img/logo.svg' />
+        <h1 class='display-inline title'>Seamergency!!!</h1>
+    </a>
+</header>
+
+
 <div class='map-container'>
+    <div class='blurb no-desktop js-fade'>
+        <p>Seattle is changing. This is how.</p>
+    </div>
     <div id='map'>
         <span class='reticle bold red h3'>o</span>
     </div>
 </div>
 
+
 <div class='content'>
-    <header class='pvx container'>
-        <a href='/' class='fc'>
+
+    <header class='no-mobile pvx container'>
+        <a href='/'>
             <img class='display-inline' src='/static/img/logo.svg' />
             <h1 class='display-inline title'>Seamergency!!!</h1>
         </a>
     </header>
 
-    <section id='summary fc'>
-        <div class='fi'>
-            <p>In the last year, in <span class='uppercase bold neighborhood'>
-                    <span class='neigh'>{{neigh}}</span>,
-                    <span class='lat'>{{lat}}</span>, 
-                    <span class='lon'>{{lon}}</span></span>.</p>
-        </div>
-        <ul class='fi hanging'>
-            <li>Crime has <span class='bold crime'>{{percentages.Crime|safe}}</span>: Number in last year: <span class="crime_count">{{ counts.Crime }}</span></li>
-            <li>Fires have <span class='bold fire'>{{percentages.Fire|safe}}</span>: Number in last year: <span class="fire_count">{{ counts.Fire }}</span></li>
-            <li>Incidents have <span class='bold accidents'>{{percentages.MVI|safe}}</span>: Number in last year: <span class="accidents_count">{{ counts.MVI }}</span></li>
-            <li>Total records: <span class='count'>{{count}}</span></li>
+    <section id='summary' class='pvl'>
+        <p class='mbn italic'>Within the last year,</p>
+        <p class='h2'>In 
+            <!-- Neighborhood -->
+            <span class='bold uppercase'>{{ neigh }}</span> at
+            <!-- Lat, Lon -->
+            <span class='button'>{{ lat }}, {{ lon }}</span>
+        </p>
+
+        <ul class='pvl h1'>
+            <!-- Fire -->
+            <li><span class='b-r'>Fire alarms</span> have 
+                <span class='bold fire'>{{percentages.Fire|safe}}</span>
+                <span class="fire_count italic">(+{{ counts.Fire }})</span>
+            </li>
+            <!-- Accidents -->
+            <li><span class='b-o'>Traffic incidents</span> have 
+                <span class='bold accidents'>{{percentages.MVI|safe}}</span>
+                <span class="accidents_count italic">(+{{ counts.MVI }})</span>
+            </li>
+            <!-- Crime -->
+            <li><span class='b-y'>Violent crime</span> has 
+                <span class='bold crime'>{{percentages.Crime|safe}}</span>
+                <span class="crime_count italic">(+{{ counts.Crime }})</span>
+            </li>
+            <!-- <li>Total records: <span class='count'>{{count}}</span></li> -->
         </ul>
     </section>
 
-    <section id='visualization'>
-        <!-- <h2>Visualize</h2> -->
+    <section id='visualization' class='pvl'>
+        <p class='h2'>Which <span class='bold uppercase'>looks</span> like:</p>
         <div class='graph'></div>
+
     </section>
 
-    <!-- <section id='overview' class='pvl'> -->
-        <!--     <h2>Overview</h2> -->
-        <!--     <p>Find out things.</p> -->
-        <!-- </section> -->
-
-
-
-    <!-- <section id='points-on-a-map' class='container'> -->
-        <!-- </section> -->
-
+    <footer class='container ptx'>
+        <p class='italic mbn'>Credits:</p>
+        <ul class='mvn'>
+            <li><a href=''>Joel</a></li>
+            <li><a href=''>Mark</a></li>
+            <li><a href=''>Constantine</a></li>
+            <li><a href=''>Jacques</a></li>
+        </ul>
+        <p class='italic mbn'>How it works:</p>
+        <ul class='mvn'>
+            <li><a href=''>Tools</a></li>
+            <li><a href=''>Proceses</a></li>
+        </ul>
+    </footer>
 </div>
+
 {% endblock %}
