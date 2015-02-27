@@ -52,3 +52,19 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Data files
+clean_addr_socrata.dbf
+clean_addr_socrata.geojson
+clean_addr_socrata.prj
+clean_addr_socrata.qpj
+clean_addr_socrata.shp
+clean_addr_socrata.shx
+output.sql
+
+# Mac stuff
+.DS_Store
+
+# QGIS stuff
+seattle.qgs
+.~lock.distinct_incident_types.ods#

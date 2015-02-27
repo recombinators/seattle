@@ -1,0 +1,147 @@
+@import 'normalize.css';
+@import 'reset.css';
+@import 'buttons.css';
+@import 'forms.css';
+@import 'colors.css';
+@import 'spacing.css';
+@import 'typography.css';
+@import 'links.css';
+@import 'lists.css';
+@import 'tables.css';
+@import 'layout.css';
+@import 'flexbox.css';
+@import 'd3.css';
+
+:root {
+    --copy-font: fira-sans;
+    --copy-font-weight: 400;
+    --copy-font-color: #444;
+}
+
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.reticle {
+    position: absolute;
+    top: 49%;
+    left: 49%;
+    z-index: 100;
+}
+
+.title { 
+    font-family: 'ff-prater-script-web';
+    font-size: 3em;
+    position: relative;
+    bottom: 10px;
+    padding-left: 10px;
+}
+
+h2 {
+    color: #aaa;
+    text-transform: uppercase;
+    border-bottom: 1px dotted #eee;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.b-y { border-bottom: 4px solid #e09200;}
+.b-o { border-bottom: 4px solid #ffbe1a;}
+.b-r { border-bottom: 4px solid #fde668;}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.pos {
+    color: #ff0000;
+}
+
+svg {
+    max-width: 100%;
+}
+
+footer ul { padding-left: 0;}
+footer li { 
+    display: inline;
+    word-spacing: 5px;
+}
+
+.button {
+    font-weight: bold;
+    border: 2px solid #eee;
+    padding: 3px 10px;
+    background: #f6f6f6;
+}
+
+.italic {
+    color: #aaa;
+}
+
+
+/* RWD (kek) */
+/* Mobile styles */
+.no-mobile { display: none; }
+header { margin-top: 2rem; }
+header a:hover { color: #ff0000; }
+.title h1 { font-size: 2rem; }
+.title img { height: 80px;}
+.map-container {
+    position: absolute;
+    height: 50vh;
+    width: 100%;
+}
+.content {
+    position: relative;
+    margin-top: 50vh;
+    padding: 2rem;
+}
+
+@media (min-width:45em) {
+    .no-desktop { display: none; }
+    .no-mobile { display: block; }
+    .title h1 {
+        font-size: 1rem;
+    }
+    .map-container {
+        position: fixed;
+        height: 100%;
+        width: 38%;
+    }
+    .content {
+        margin-top: 0;
+        position: relative;
+        margin-left: 38%;
+        padding-left: 2rem;
+        width: 61%;
+    }
+
+}
+

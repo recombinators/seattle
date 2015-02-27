@@ -1,0 +1,27 @@
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.y.axis path,
+.y.axis line {
+    display: none;
+}
+.x.axis path,
+.x.axis line {
+    /* display: none; */
+}
+
+.line {
+    fill: none;
+    stroke: "#ff0000";
+    stroke-width: 0px;
+}
+
+.tooltip{
+    text-anchor: middle;
+    fill: "#ff0000";
+    stroke: 0px;
+}
