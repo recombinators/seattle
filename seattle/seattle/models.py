@@ -1,5 +1,4 @@
 from sqlalchemy import (
-    Index,
     Integer,
     Text,
     func
