@@ -71,35 +71,37 @@ class Incidents_Model(Base):
     @classmethod
     def percentage(cls, list_of_times):
         """Given a list of times in epoch time, return the percentage increase over the last year."""
-        one_year_ago_epoch = list_of_times[-1]-365
-        length_list = len(list_of_times)
-        print "length: {}".format(length_list)
-        incidents_prior = 0
-        for time in list_of_times:
-            if time < one_year_ago_epoch:
-                incidents_prior += 1
-            if time > one_year_ago_epoch:
-                break
+        try:
+            one_year_ago_epoch = list_of_times[-1]-365
+            length_list = len(list_of_times)
+            print "length: {}".format(length_list)
+            incidents_prior = 0
+            for time in list_of_times:
+                if time < one_year_ago_epoch:
+                    incidents_prior += 1
+                if time > one_year_ago_epoch:
+                    break
 
-        incidents_last_year = length_list-incidents_prior
-        years_prior = (one_year_ago_epoch-list_of_times[0])/365
-        incidents_per_year_prior = incidents_prior/years_prior
-        incidents_per_year_last_year = incidents_last_year
-        percent = (
-            100*(incidents_per_year_last_year-incidents_per_year_prior)
-            / incidents_per_year_prior)
+            incidents_last_year = length_list-incidents_prior
+            years_prior = (one_year_ago_epoch-list_of_times[0])/365
+            incidents_per_year_prior = incidents_prior/years_prior
+            incidents_per_year_last_year = incidents_last_year
+            percent = (
+                100*(incidents_per_year_last_year-incidents_per_year_prior)
+                / incidents_per_year_prior)
 
-        return_string = ""
-        pos_neg = ""
-        if percent >= 0:
-            pos_neg = ("pos", "increased")
-        else:
-            pos_neg = ("neg", "decreased")
-        return_string = (
-            '<span class="{}">{} {}%</span>'.format(pos_neg[0], pos_neg[1],
-                                                   abs(round(percent, 2)))
-            )
-
+            return_string = ""
+            pos_neg = ""
+            if percent >= 0:
+                pos_neg = ("pos", "increased")
+            else:
+                pos_neg = ("neg", "decreased")
+            return_string = (
+                '<span class="{}">{} {}%</span>'.format(pos_neg[0], pos_neg[1],
+                                                       abs(round(percent, 2)))
+                )
+        except:
+            return_string = '<span class="no_change">---- 0.00%</span>'
         return return_string
 
 

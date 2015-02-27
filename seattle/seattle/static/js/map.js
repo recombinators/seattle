@@ -157,7 +157,7 @@ function graph() {
         })
     }
     catch(err) {
-        $(".graph").replaceWith('No data available.')
+        $(".graph").replaceWith('No data available')
     }
 };
 
@@ -179,8 +179,12 @@ map.on('moveend', function(e) {
         $(".fire").children().replaceWith(json.percentages.fire);
         $(".accidents").children().replaceWith(json.percentages.mvi);
         bulk_data = json.output;
-        $(".graph").children().remove();
-        graph();
+        if (json.output[0].length === 0) {
+            $(".graph").children().replaceWith('No data available.')
+        } else {
+            $(".graph").contents().remove();
+            graph();
+        }
     });
 });
 

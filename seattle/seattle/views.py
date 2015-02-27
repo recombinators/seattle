@@ -105,28 +105,31 @@ def line_plot_lat_long_ajax(request):
     output_percentages.append(Incidents_Model.percentage(output[2]))
     output_percentages_dict = dict(zip(names, output_percentages))
 
-    min_date = min(min(output[0]), min(output[1]), min(output[2]))
-    max_date = max(max(output[0]), max(output[1]), max(output[2]))
-    date_range = max_date - min_date
-    number_months = int(math.ceil(date_range/30))
-    days_in_month = 30
-    start_date = min_date
-    date = start_date
+    try:
+        min_date = min(min(output[0]), min(output[1]), min(output[2]))
+        max_date = max(max(output[0]), max(output[1]), max(output[2]))
+        date_range = max_date - min_date
+        number_months = int(math.ceil(date_range/30))
+        days_in_month = 30
+        start_date = min_date
+        date = start_date
 
-    months = []
-    for i in range(number_months):
-        months.append(date)
-        date += days_in_month
-    # print(wks)
+        months = []
+        for i in range(number_months):
+            months.append(date)
+            date += days_in_month
+        # print(wks)
 
-    count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
-    for k in range(3):
-        for i in output[k]:
-            for j in range(number_months - 1):
-                if i > months[j] and i < months[j+1]:
-                    count[k][j] += 1
-    print(count)
-
+        count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
+        for k in range(3):
+            for i in output[k]:
+                for j in range(number_months - 1):
+                    if i > months[j] and i < months[j+1]:
+                        count[k][j] += 1
+        print(count)
+    except ValueError:
+        months = []
+        count = []
     return {'output': [months[1:], count],
             'percentages': output_percentages_dict,
             'lat': lat, 'lon': lon}
