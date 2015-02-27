@@ -20,10 +20,10 @@
     </head>
 
     <body>
-        <script>var data = {{output}}</script>
+        
 
         {% block body %}{% endblock %}
-
+        <script>var data = {{output|safe}}</script>
         <!-- All the JS -->
         <script type='text/javascript' src='/static/js/map.js'></script>
         <!-- Webfonts via TypeKit -->

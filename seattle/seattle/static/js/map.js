@@ -24,17 +24,6 @@ function graph() {
         data[i]['month'] = new Date(data[i]['month']*1000*60*60*24);
     }
 
-
-    // data = [];
-    // for (i = 0; i < bulk_data[0].length; ++i) {
-    //   data.push({
-    //     'month': dates[i],
-    //     'fire': bulk_data[1][0][i],
-    //     'mvi': bulk_data[1][1][i],
-    //     'crime': bulk_data[1][2][i]
-    //   });
-    // }
-
     var w = 960,
         h = 500,
         p = [50, 40, 40, 20],
@@ -42,7 +31,6 @@ function graph() {
         y = d3.scale.linear().range([0, h - p[0] - p[2]]),
         z = d3.scale.ordinal().range(["lightpink", "darkgray", "lightblue"])
         yx = d3.scale.linear().range([0, h - p[0] - p[2]]),
-    // parse = d3.time.format("%m/%Y").parse,
         format = d3.time.format("%b %Y");
 
     var svg = d3.select(".graph").append("svg:svg")

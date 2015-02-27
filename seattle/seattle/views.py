@@ -60,7 +60,7 @@ def line_plot(request):
         bin_indicies = np.digitize(item, months[1:], right=True).tolist()
         count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
     data = [{'month': months[1:][j], 'fire':  count[0][j], 'mvi':  count[1][j], 'crime':  count[2][j]} for j in range(number_months-1)]
-
+    # import pdb; pdb.set_trace()
     return {'output': data,
             'percentages': output_percentages,
             'counts': output_count,
