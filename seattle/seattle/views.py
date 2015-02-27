@@ -64,10 +64,12 @@ def line_plot_lat_long_ajax(request):
     # Get precentage and yearly count data
     output_percentages = {}
     output_count = {}
+    output_compare = []
     for i in range(3):
         temp = Incidents_Model.percentage(output[i])
         output_percentages[incident_types[i]] = temp['string']
         output_count[incident_types[i]] = temp['year_count']
+        output_compare.append({'type': incident_types[i], 'prior': temp['prior_rate'], 'oneyear': temp['year_count']})
         # print '{} count: {}'.format(incident_types[i], temp['year_count'])
 
     # Generate data for graph
@@ -86,8 +88,10 @@ def line_plot_lat_long_ajax(request):
     except ValueError:
         data = []
 
+    import pdb; pdb.set_trace()
     return {'output': data,
             'percentages': output_percentages,
+            'compare': output_compare,
             'counts': output_count,
             'lat': round(lat, 3),
             'lon': round(lon, 3),

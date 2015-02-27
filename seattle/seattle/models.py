@@ -96,4 +96,4 @@ class Incidents_Model(Base):
         except:     # In case that no incidents are found in certain area
             return_string = '<span class="no_change">---- 0.00%   </span>'
             incidents_last_year = 0
-        return {'string': return_string, 'year_count': incidents_last_year}
+        return {'string': return_string, 'year_count': incidents_last_year, 'prior_rate': incidents_per_year_prior}

@@ -25,6 +25,8 @@
 
         {% block body %}{% endblock %}
         <script>var data = {{output|safe}}</script>
+        <script>var compare_data = {{compare|safe}}</script>
+
         <!-- All the JS -->
         <script type='text/javascript' src='/static/js/map.js'></script>
         <!-- Webfonts via TypeKit -->

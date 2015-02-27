@@ -105,7 +105,75 @@ function graph() {
 
 }
 
+function groupedbar() {
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x0 = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+    var x1 = d3.scale.ordinal();
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var color = d3.scale.ordinal()
+        .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x0)
+        .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(d3.format(".2s"));
+
+    var svg = d3.select(".groupedbar").append("svg:svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+      x0.domain(compare_data.map(function(d) { return d.State; }));
+      x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+      y.domain([0, d3.max(compare_data, function(d) { return d3.max(d.incidents, function(d) { return d.value; }); })]);
+
+      svg.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+        .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Population");
+
+      var state = svg.selectAll(".state")
+          .data(compare_data)
+        .enter().append("g")
+          .attr("class", "g")
+          .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+
+      state.selectAll("rect")
+          .compare_data(function(d) { return d.incidents; })
+        .enter().append("rect")
+          .attr("width", x1.rangeBand())
+          .attr("x", function(d) { return x1(d.name); })
+          .attr("y", function(d) { return y(d.value); })
+          .attr("height", function(d) { return height - y(d.value); })
+          .style("fill", function(d) { return color(d.name); });
+}
+
 window.onload = graph();
+window.onload = groupedbar();
 
 // On move, recalculate center
 map.on('moveend', function(e) {
@@ -131,14 +199,20 @@ map.on('moveend', function(e) {
         $(".lon").contents().replaceWith(json.lon);
         $(".neigh").contents().replaceWith(json.neigh);
 
+        
         // Update graph
+        compare_data = json.compare
         data = json.output;
         if (json.output.length === 0) {
             $(".graph").children().replaceWith('No data available.')
+            $(".groupedbar").children().replaceWith('No data available.')
         } else {
             $(".graph").contents().remove();
+            $(".groupedbar").contents().remove();
             graph();
         }
+
+
     });
 });
 
