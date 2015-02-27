@@ -9,6 +9,8 @@ from .models import (
 import time
 import pytz
 import math
+import numpy as np
+from scipy.stats import binned_statistic
 
 
 def epoch_time(dt):
@@ -35,8 +37,8 @@ def line_plot(request):
     try:
         output = []
         start_time = time.time()
-        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Fire', radius)))
+        output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'MVI', radius)))
         output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, 'Crime', radius)))
         print 'time to call db for initial query: {}'.format(time.time()-start_time)
     except DBAPIError:
@@ -55,25 +57,17 @@ def line_plot(request):
 
     min_date = min(min(output[0]), min(output[1]), min(output[2]))
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
-    date_range = max_date - min_date
-    number_months = int(math.ceil(date_range/30))
-    days_in_month = 30
-    start_date = min_date
-    date = start_date
+    number_months = int(math.ceil((max_date - min_date)/30))
+    months = [min_date + 30*i for i in range(number_months)]
+    count = [[], [], []]
+    for j, item in enumerate(output):
+        bin_indicies = np.digitize(item, months[1:], right=True).tolist()
+        count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
+    data = [{'month': months[1:][j], 'fire':  count[0][j], 'mvi':  count[1][j], 'crime':  count[2][j]} for j in range(number_months-1)]
 
-    months = []
-    for i in range(number_months):
-        months.append(date)
-        date += days_in_month
+    import pdb; pdb.set_trace()
 
-    count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
-    for k in range(3):
-        for i in output[k]:
-            for j in range(number_months - 1):
-                if i > months[j] and i < months[j+1]:
-                    count[k][j] += 1
-
-    return {'output': [months[1:], count],
+    return {'output': data,
             'percentages': output_percentages_dict,
             'lat': lat, 'lon': lon}
 
@@ -107,27 +101,17 @@ def line_plot_lat_long_ajax(request):
 
     min_date = min(min(output[0]), min(output[1]), min(output[2]))
     max_date = max(max(output[0]), max(output[1]), max(output[2]))
-    date_range = max_date - min_date
-    number_months = int(math.ceil(date_range/30))
-    days_in_month = 30
-    start_date = min_date
-    date = start_date
+    number_months = int(math.ceil((max_date - min_date)/30))
+    months = [min_date + 30*i for i in range(number_months)]
+    count = [[], [], []]
+    for j, item in enumerate(output):
+        bin_indicies = np.digitize(item, months[1:], right=True).tolist()
+        count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
+    data = [{'month': months[1:][j], 'fire':  count[0][j], 'mvi':  count[1][j], 'crime':  count[2][j]} for j in range(number_months-1)]
 
-    months = []
-    for i in range(number_months):
-        months.append(date)
-        date += days_in_month
-    # print(wks)
 
-    count = [[0] * (number_months - 1), [0] * (number_months - 1), [0] * (number_months - 1)]
-    for k in range(3):
-        for i in output[k]:
-            for j in range(number_months - 1):
-                if i > months[j] and i < months[j+1]:
-                    count[k][j] += 1
-    print(count)
 
-    return {'output': [months[1:], count],
+    return {'output': data,
             'percentages': output_percentages_dict,
             'lat': lat, 'lon': lon}
 
