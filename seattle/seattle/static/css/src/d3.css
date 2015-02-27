@@ -5,8 +5,13 @@
     shape-rendering: crispEdges;
 }
 
-.x.axis path {
+.y.axis path,
+.y.axis line {
     display: none;
+}
+.x.axis path,
+.x.axis line {
+    /* display: none; */
 }
 
 .line {
