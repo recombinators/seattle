@@ -16,8 +16,17 @@ import pytest
 
 TEST_DSN = 'dbname=seattle_test user=Joel'
 
-
+# NEIGHBORHOOD TESTS
 def test_neighborhood_returns_correctly(sql_session):
     neighborhood = Neighborhoods_Model.neighborhood(47.6770046, -122.3849916,
                                                     sql_session)
     assert neighborhood == 'Loyal Heights'
+
+
+def test_neighborhood2_returns_correctly(sql_session):
+    neighborhood = Neighborhoods_Model.neighborhood(47.698, -122.302,
+                                                    sql_session)
+    assert neighborhood == 'Meadowbrook'
+
+
+
