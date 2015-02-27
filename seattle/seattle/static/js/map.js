@@ -173,9 +173,9 @@ map.on('moveend', function(e) {
         dataType: "json",
         data: { 'lat_cen': lat, 'lon_cen': lng},
     }).done(function(json) {
-        $(".crime").children().replaceWith(json.percentages.crime);
-        $(".fire").children().replaceWith(json.percentages.fire);
-        $(".accidents").children().replaceWith(json.percentages.mvi);
+        $(".crime").children().replaceWith(json.percentages.Crime);
+        $(".fire").children().replaceWith(json.percentages.Fire);
+        $(".accidents").children().replaceWith(json.percentages.MVI);
         bulk_data = json.output;
         if (json.output[0].length === 0) {
             $(".graph").children().replaceWith('No data available.')
