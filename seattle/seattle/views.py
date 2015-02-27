@@ -52,8 +52,8 @@ def line_plot_lat_long_ajax(request):
         incident_types = ['Fire', 'MVI', 'Crime']
         output = []
         for inc_type in incident_types:
-            (output.append(epoch_list(
-                Incidents_Model.cat_circle(lat, lon, inc_type, radius))))
+            output.append(epoch_list(
+                Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
         # Count number of db results
         db_count = 0
         for x in range(3):
@@ -80,7 +80,7 @@ def line_plot_lat_long_ajax(request):
         for j, item in enumerate(output):
             bin_indicies = np.digitize(item, months[1:], right=True).tolist()
             count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
-        data = [{'month': months[1:][j], 'fire':  count[0][j],
+        data = [{'month': months[1:][j]*1000*60*60*24, 'fire':  count[0][j],
                  'mvi':  count[1][j], 'crime':  count[2][j]}
                 for j in range(number_months-1)]
     except ValueError:
