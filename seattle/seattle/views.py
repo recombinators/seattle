@@ -29,17 +29,22 @@ def epoch_list(a_list):
 
 @view_config(route_name='index', renderer='templates/index.jinja2')
 def line_plot(request):
+    """View for index returns dict with graph, %, count, and lat/lon data.
+    Location is the center of Seattle as defined by Google Maps.
+    Find all incidents within ~400m radius of location."""
     return line_plot_lat_long_ajax(request)
 
 
 @view_config(route_name='ajax', renderer='json')
 def line_plot_lat_long_ajax(request):
-    "Returns epoch datetime params as a list."
+    """View for ajax request returns dict with graph, %, count, and lat/lon data.
+    Location is the center of Seattle as defined by Google Maps.
+    Find all incidents within ~400m radius of location."""
     lat = request.params.get('lat_cen', 47.623636)
     lon = request.params.get('lon_cen', -122.336072)
     print 'lat: {}'.format(lat)
     print 'lon: {}'.format(lon)
-    radius = 0.005 # in degrees
+    radius = 0.005      # in degrees
 
     # Query database for all incidents within a ~700m radius.
     try:
