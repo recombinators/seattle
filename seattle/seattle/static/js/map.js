@@ -175,7 +175,7 @@ function groupedbar() {
         .attr("x", function(d) { return x1(d.name); })
         // .attr("y", function(d) { return y(d.name); })
         .attr("transform", "translate(0," + height/2 + ")" )
-        // .attr("height", function(d) { return height - y(d.value); })
+        .attr("height", function(d) { return height - y(d.value); })
         .style("fill", function(d) { return color(d.name); });
 }
 
