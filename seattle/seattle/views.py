@@ -51,11 +51,9 @@ def line_plot_lat_long_ajax(request):
     try:
         incident_types = ['Fire', 'MVI', 'Crime']
         output = []
-        date_time_object_list = []
         for inc_type in incident_types:
-            date_time_object = Incidents_Model.cat_circle(lat, lon, inc_type, radius)
-            date_time_object_list.append(date_time_object)
-            output.append(epoch_list(date_time_object))
+            output.append(epoch_list(
+                Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
         # Count number of db results
         db_count = 0
         for x in range(3):
