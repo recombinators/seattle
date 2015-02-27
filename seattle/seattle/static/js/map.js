@@ -136,40 +136,45 @@ function groupedbar() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var incidentNames = d3.keys(data[0]).filter(function(key) { return key !== "type"; });
+    data.forEach(function(d) {
+        d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+    });
 
-      x0.domain(compare_data.map(function(d) { return d.State; }));
-      x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
-      y.domain([0, d3.max(compare_data, function(d) { return d3.max(d.incidents, function(d) { return d.value; }); })]);
 
-      svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+    x0.domain(compare_data.map(function(d) { return d.State; }));
+    x1.domain(incidentNames).rangeRoundBands([0, x0.rangeBand()]);
+    y.domain([0, d3.max(compare_data, function(d) { return d3.max(d.incidents, function(d) { return d.value; }); })]);
 
-      svg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis)
-        .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Population");
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
 
-      var state = svg.selectAll(".state")
-          .data(compare_data)
-        .enter().append("g")
-          .attr("class", "g")
-          .attr("transform", function(d) { return "translate(" + x0(d.State) + ",0)"; });
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Population");
 
-      state.selectAll("rect")
-          .compare_data(function(d) { return d.incidents; })
-        .enter().append("rect")
-          .attr("width", x1.rangeBand())
-          .attr("x", function(d) { return x1(d.name); })
-          .attr("y", function(d) { return y(d.value); })
-          .attr("height", function(d) { return height - y(d.value); })
-          .style("fill", function(d) { return color(d.name); });
+    var state = svg.selectAll(".state")
+      .data(compare_data)
+    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + x0(d.type) + ",0)"; });
+
+    type.selectAll("rect")
+      .compare_data(function(d) { return d.incidents; })
+    .enter().append("rect")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { return x1(d.name); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .style("fill", function(d) { return color(d.name); });
 }
 
 window.onload = graph();
