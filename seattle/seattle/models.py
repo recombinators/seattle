@@ -26,11 +26,14 @@ class Neighborhoods_Model(Base):
     @classmethod
     def neighborhood(cls, lat, lon):
         """Output neighborhood that contains lat lon."""
-        return (DBSession.query(cls)
-                .filter(func.ST_Within(func.ST_SetSRID(func
-                        .ST_MakePoint(lon, lat), 4236), func
-                    .ST_SetSRID(cls.geom, 4236))).one().name
-                )
+        try:
+            return (DBSession.query(cls)
+                    .filter(func.ST_Within(func.ST_SetSRID(func
+                            .ST_MakePoint(lon, lat), 4236), func
+                        .ST_SetSRID(cls.geom, 4236))).one().name
+                    )
+        except:
+            return u'----'
 
 
 class Incidents_Model(Base):
