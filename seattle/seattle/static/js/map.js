@@ -19,11 +19,6 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 map.scrollWheelZoom.disable();
 
 function graph() {
-    dates = [];
-    for (i = 0; i < data.length; i++) {
-        data[i].month = new Date(data[i].month*1000*60*60*24);
-    }
-
     var w = 960,
         h = 500,
         p = [0, 0, 0, 0],
@@ -51,7 +46,7 @@ function graph() {
     // Transpose the data into layers by type.
     var incidents = d3.layout.stack()(["fire", "mvi", "crime"].map(function(incident) {
         return data.map(function(d) {
-          return {x: d.month, y: +d[incident]};
+          return {x: new Date(d.month), y: +d[incident]};
         });
     }));
 
