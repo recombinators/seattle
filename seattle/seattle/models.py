@@ -18,6 +18,23 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
+class Neighborhoods_Model(Base):
+    __tablename__ = 'neighborhoods_wa'
+    gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
+    geom = sa.Column(sa.UnicodeText, nullable=False)
+    name = sa.Column(sa.UnicodeText, nullable=False)
+
+
+    @classmethod
+    def neighborhood(cls, lat, lon):
+        """Output neighborhood that contains lat lon."""
+        return (DBSession.query(cls)
+                .filter(func.ST_Within(func.ST_SetSRID(func
+                        .ST_MakePoint(lon, lat), 4236), func
+                    .ST_SetSRID(cls.geom, 4236))).one().name
+                )
+
+
 class Incidents_Model(Base):
     __tablename__ = 'incidents'
     gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)

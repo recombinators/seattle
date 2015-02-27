@@ -4,6 +4,7 @@ from sqlalchemy.exc import DBAPIError
 from .models import (
     DBSession,
     Incidents_Model,
+    Neighborhoods_Model,
     )
 
 import time
@@ -40,8 +41,10 @@ def line_plot_lat_long_ajax(request):
     """View for ajax request returns dict with graph, %, count, and lat/lon data.
     Location is the center of Seattle as defined by Google Maps.
     Find all incidents within ~400m radius of location."""
-    lat = float(request.params.get('lat_cen', 47.623636))
-    lon = float(request.params.get('lon_cen', -122.336072))
+    lat = float(request.params.get('lat_cen', 47.614848))
+    lon = float(request.params.get('lon_cen', -122.3359059))
+
+    neighborhood = Neighborhoods_Model.neighborhood(lat, lon)
     # print 'lat: {}'.format(lat)
     # print 'lon: {}'.format(lon)
     radius = 0.01      # in degrees
@@ -90,9 +93,11 @@ def line_plot_lat_long_ajax(request):
     return {'output': data,
             'percentages': output_percentages,
             'counts': output_count,
-            'lat': round(lat, 3), 'lon': round(lon, 3), 'count': db_count}
+            'lat': round(lat, 3),
+            'lon': round(lon, 3),
+            'count': db_count,
+            'neigh': neighborhood}
 
-            # 'lat': lat, 'lon': lon}
 
 con_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

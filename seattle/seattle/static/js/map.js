@@ -132,8 +132,9 @@ map.on('moveend', function(e) {
         $(".fire_count").contents().replaceWith(json.counts.Fire);
         $(".accidents_count").contents().replaceWith(json.counts.MVI);
         $(".count").contents().replaceWith(json.count);
-        $(".lat").replaceWith(json.lat);
-        $(".lon").replaceWith(json.lon);
+        $(".lat").contents().replaceWith(json.lat);
+        $(".lon").contents().replaceWith(json.lon);
+        $(".neigh").contents().replaceWith(json.neigh);
 
         // Update graph
         data = json.output;
