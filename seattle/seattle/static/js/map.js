@@ -14,14 +14,16 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
     minZoom: 12
 });
 
-
+map.addControl(L.mapbox.geocoderControl('mapbox.places', {
+    keepOpen: true
+}));
 // Disable scrollwheel zoom
 map.scrollWheelZoom.disable();
 
 function graph() {
     var w = 960,
         h = 500,
-        p = [0, 0, 0, 0],
+        p = [30, 20, 40, 0],
         x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
         y = d3.scale.linear().range([0, h - p[0] - p[2]]),
         z = d3.scale.ordinal().range(["#FDE668", "#FFBE1A", "#E09200"])
@@ -41,6 +43,13 @@ function graph() {
         .append("svg:g")
         .attr("transform", "translate(" + p[3] + "," + (h - p[2]) + ")");
 
+    var today = new Date();
+    var past = new Date(today.getDate() - 365);
+    // var past-year = (today.getDate() - 365);    //<<===== no need
+    // var mm = today.getMonth()+1; //January is 0!   //<<===== no need
+    // var yyyy = today.getFullYear();  //<<===== no need
+
+
     svg.call(tip);
 
     // Transpose the data into layers by type.
@@ -55,11 +64,21 @@ function graph() {
     y.domain([0, d3.max(incidents[incidents.length - 1], function(d) { return d.y0 + d.y; })]);
     yx.domain([d3.max(incidents[incidents.length - 1], function(d) { return d.y0 + d.y; }), 0]);
 
+    // svg.append("line")
+    //     .scale(x)
+    //     .attr("x1", x(past))  //<<== change your code here
+    //     .attr("y1", 0)
+    //     .attr("x2", x(past))  //<<== and here
+    //     .attr("y2", h - p[0] - p[2])
+    //     .style("stroke-width", 2)
+    //     .style("stroke", "red")
+    //     .style("fill", "none");
+
     // Define the axes
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(5);
+        .ticks(20);
 
     // svg.append("g")
     //     .attr("class", "x axis")
@@ -70,20 +89,20 @@ function graph() {
     //     .attr("x", 9)
     //     .attr("dy", ".35em")
     //     .attr("transform", "rotate(90)")
-    //     .style("text-anchor", "start")
-    //     .text(format);
+    //     .style("text-anchor", "start");
 
     var yAxis = d3.svg.axis()
         .scale(yx)
         .orient("left")
         .ticks(5);
 
-    // svg.append("g")
-    //     .attr("class", "y axis")
-    //     .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
-    //     .call(yAxis)
-    //     .selectAll("text")
-    //     .style("text-anchor", "start");
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + (p[1] + p[3] - 12) + "," + -(h - p[2] - p[0]) + ")")
+        .call(yAxis)
+        .selectAll("text")
+        .style("text-anchor", "start")
+        .attr("font-style", "italic");
 
     // Add a group for each cause.
     var incident = svg.selectAll("g.incident")
