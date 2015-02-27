@@ -21,7 +21,7 @@ map.addControl(L.mapbox.geocoderControl('mapbox.places', {
 map.scrollWheelZoom.disable();
 
 function graph() {
-    var w = 960,
+    var w = 720,
         h = 500,
         p = [30, 20, 40, 0],
         x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
