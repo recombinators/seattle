@@ -26,7 +26,7 @@ function graph() {
 
     var w = 960,
         h = 500,
-        p = [50, 40, 40, 20],
+        p = [0, 0, 0, 0],
         x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
         y = d3.scale.linear().range([0, h - p[0] - p[2]]),
         z = d3.scale.ordinal().range(["#FDE668", "#FFBE1A", "#E09200"])

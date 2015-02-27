@@ -92,9 +92,9 @@ h2 {
     color: #ff0000;
 }
 
-.neg {
-    color: green;
-}
+/* .neg { */
+/*     color: green; */
+/* } */
 
 .fc {
     display: flex;
