@@ -40,11 +40,11 @@ def line_plot_lat_long_ajax(request):
     """View for ajax request returns dict with graph, %, count, and lat/lon data.
     Location is the center of Seattle as defined by Google Maps.
     Find all incidents within ~400m radius of location."""
-    lat = request.params.get('lat_cen', 47.623636)
-    lon = request.params.get('lon_cen', -122.336072)
+    lat = float(request.params.get('lat_cen', 47.623636))
+    lon = float(request.params.get('lon_cen', -122.336072))
     # print 'lat: {}'.format(lat)
     # print 'lon: {}'.format(lon)
-    radius = 0.005      # in degrees
+    radius = 0.01      # in degrees
 
     # Query database for all incidents within a ~700m radius.
     try:
@@ -54,6 +54,10 @@ def line_plot_lat_long_ajax(request):
         for inc_type in incident_types:
             (output.append(epoch_list(
                 Incidents_Model.cat_circle(lat, lon, inc_type, radius))))
+        # Count number of db results
+        db_count = 0
+        for x in range(3):
+            db_count += len(output[x])
         # print ('time to call db for initial query: {}'.format(time.time()-start_time))
     except DBAPIError:
         return Response(con_err_msg, content_type='text/plain', status_int=500)
@@ -86,8 +90,9 @@ def line_plot_lat_long_ajax(request):
     return {'output': data,
             'percentages': output_percentages,
             'counts': output_count,
-            # 'lat': round(lat, 3), 'lon': round(lon, 3)}
-            'lat': lat, 'lon': lon}
+            'lat': round(lat, 3), 'lon': round(lon, 3), 'count': db_count}
+
+            # 'lat': lat, 'lon': lon}
 
 con_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

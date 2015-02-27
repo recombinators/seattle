@@ -124,15 +124,18 @@ map.on('moveend', function(e) {
         dataType: "json",
         data: { 'lat_cen': lat, 'lon_cen': lng},
     }).done(function(json) {
+        // Update site contents with new data
         $(".crime").children().replaceWith(json.percentages.Crime);
         $(".fire").children().replaceWith(json.percentages.Fire);
         $(".accidents").children().replaceWith(json.percentages.MVI);
         $(".crime_count").contents().replaceWith(json.counts.Crime);
         $(".fire_count").contents().replaceWith(json.counts.Fire);
         $(".accidents_count").contents().replaceWith(json.counts.MVI);
+        $(".count").contents().replaceWith(json.count);
         $(".lat").replaceWith(json.lat);
         $(".lon").replaceWith(json.lon);
 
+        // Update graph
         data = json.output;
         if (json.output.length === 0) {
             $(".graph").children().replaceWith('No data available.')
