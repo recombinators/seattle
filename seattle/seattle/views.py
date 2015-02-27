@@ -29,42 +29,7 @@ def epoch_list(a_list):
 
 @view_config(route_name='index', renderer='templates/index.jinja2')
 def line_plot(request):
-    "Returns epoch datetime params as a list."
-    lat = 47.623636
-    lon = -122.336072
-    radius = 0.01
-
-    try:
-        incident_types = ['Fire', 'MVI', 'Crime']
-        output = []
-        start_time = time.time()
-        for inc_type in incident_types:
-            output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
-        print 'time to call db for initial query: {}'.format(time.time()-start_time)
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    output_percentages = {}
-    output_count = {}
-    for i in range(3):
-        temp = Incidents_Model.percentage(output[i])
-        output_percentages[incident_types[i]] = temp['string']
-        output_count[incident_types[i]] = temp['year_count']
-        print '{} count: {}'.format(incident_types[i], temp['year_count'])
-
-    min_date = min(min(output[0]), min(output[1]), min(output[2]))
-    max_date = max(max(output[0]), max(output[1]), max(output[2]))
-    number_months = int(math.ceil((max_date - min_date)/30))
-    months = [min_date + 30*i for i in range(number_months)]
-    count = [[], [], []]
-    for j, item in enumerate(output):
-        bin_indicies = np.digitize(item, months[1:], right=True).tolist()
-        count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
-    data = [{'month': months[1:][j], 'fire':  count[0][j], 'mvi':  count[1][j], 'crime':  count[2][j]} for j in range(number_months-1)]
-    # import pdb; pdb.set_trace()
-    return {'output': data,
-            'percentages': output_percentages,
-            'counts': output_count,
-            'lat': lat, 'lon': lon}
+    return line_plot_lat_long_ajax(request)
 
 
 @view_config(route_name='ajax', renderer='json')
@@ -74,17 +39,22 @@ def line_plot_lat_long_ajax(request):
     lon = request.params.get('lon_cen', -122.336072)
     print 'lat: {}'.format(lat)
     print 'lon: {}'.format(lon)
-    radius = 0.01
+    radius = 0.01 # in degrees
 
+    # Query database for all incidents within a ~700m radius.
     try:
         incident_types = ['Fire', 'MVI', 'Crime']
         output = []
         start_time = time.time()
         for inc_type in incident_types:
-            output.append(epoch_list(Incidents_Model.cat_circle(lat, lon, inc_type, radius)))
-        print 'time to call db for initial query: {}'.format(time.time()-start_time)
+            (output.append(epoch_list(
+                Incidents_Model.cat_circle(lat, lon, inc_type, radius))))
+        print ('time to call db for initial query: {}'
+               .format(time.time()-start_time))
     except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
+        return Response(con_err_msg, content_type='text/plain', status_int=500)
+
+    # Get precentage and yearly count data
     output_percentages = {}
     output_count = {}
     for i in range(3):
@@ -93,6 +63,7 @@ def line_plot_lat_long_ajax(request):
         output_count[incident_types[i]] = temp['year_count']
         print '{} count: {}'.format(incident_types[i], temp['year_count'])
 
+    # Generate data for graph
     try:
         min_date = min(min(output[0]), min(output[1]), min(output[2]))
         max_date = max(max(output[0]), max(output[1]), max(output[2]))
@@ -102,17 +73,19 @@ def line_plot_lat_long_ajax(request):
         for j, item in enumerate(output):
             bin_indicies = np.digitize(item, months[1:], right=True).tolist()
             count[j] = [bin_indicies.count(i) for i in range(number_months-1)]
-        data = [{'month': months[1:][j], 'fire':  count[0][j], 'mvi':  count[1][j], 'crime':  count[2][j]} for j in range(number_months-1)]
-
+        data = [{'month': months[1:][j], 'fire':  count[0][j],
+                 'mvi':  count[1][j], 'crime':  count[2][j]}
+                for j in range(number_months-1)]
     except ValueError:
         months = []
         count = []
+
     return {'output': data,
             'percentages': output_percentages,
             'counts': output_count,
-            'lat': lat, 'lon': lon}
+            'lat': round(lat, 3), 'lon': round(lon, 3)}
 
-conn_err_msg = """\
+con_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
 might be caused by one of the following things:
 
