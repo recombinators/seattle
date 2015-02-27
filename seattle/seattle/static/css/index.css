@@ -1260,8 +1260,13 @@ tr {
     shape-rendering: crispEdges;
 }
 
-.x.axis path {
+.y.axis path,
+.y.axis line {
     display: none;
+}
+.x.axis path,
+.x.axis line {
+    /* display: none; */
 }
 
 .line {
@@ -1276,11 +1281,6 @@ tr {
     stroke: 0px;
 }
 
-.map-container {
-    position: fixed;
-    height: 100%;
-    width: 38%;
-}
 
 #map {
     position: absolute;
@@ -1296,18 +1296,11 @@ tr {
     z-index: 100;
 }
 
-.content {
-    position: relative;
-    margin-left: 38%;
-    padding-left: 2rem;
-}
-
 .title { 
     font-family: 'ff-prater-script-web';
     font-size: 3em;
     position: relative;
     bottom: 10px;
-    color: red;
     padding-left: 10px;
 }
 
@@ -1325,6 +1318,10 @@ h2 {
   color: #fff;
   border-radius: 2px;
 }
+
+.b-y { border-bottom: 4px solid #e09200;}
+.b-o { border-bottom: 4px solid #ffbe1a;}
+.b-r { border-bottom: 4px solid #fde668;}
 
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
@@ -1350,21 +1347,64 @@ h2 {
     color: #ff0000;
 }
 
-.neg {
-    color: green;
+svg {
+    max-width: 100%;
 }
 
-.fc {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: row;
-        -ms-flex-direction: row;
-            flex-direction: row;
-    -webkit-flex-wrap: nowrap;
-        -ms-flex-wrap: nowrap;
-            flex-wrap: nowrap;
-    -webkit-justify-content: space-between;
-        -ms-flex-pack: justify;
-            justify-content: space-between;
+footer ul { padding-left: 0;}
+footer li { 
+    display: inline;
+    word-spacing: 5px;
 }
+
+.button {
+    font-weight: bold;
+    border: 2px solid #eee;
+    padding: 3px 10px;
+    background: #f6f6f6;
+}
+
+.italic {
+    color: #aaa;
+}
+
+
+/* RWD (kek) */
+/* Mobile styles */
+.no-mobile { display: none; }
+header { margin-top: 2rem; }
+header a:hover { color: #ff0000; }
+.title h1 { font-size: 2rem; }
+.title img { height: 80px;}
+.map-container {
+    position: absolute;
+    height: 50vh;
+    width: 100%;
+}
+.content {
+    position: relative;
+    margin-top: 50vh;
+    padding: 2rem;
+}
+
+@media (min-width:45em) {
+    .no-desktop { display: none; }
+    .no-mobile { display: block; }
+    .title h1 {
+        font-size: 1rem;
+    }
+    .map-container {
+        position: fixed;
+        height: 100%;
+        width: 38%;
+    }
+    .content {
+        margin-top: 0;
+        position: relative;
+        margin-left: 38%;
+        padding-left: 2rem;
+        width: 61%;
+    }
+
+}
+
