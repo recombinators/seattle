@@ -1,6 +1,4 @@
 from sqlalchemy import (
-    Integer,
-    Text,
     func
     )
 import sqlalchemy as sa
@@ -19,11 +17,11 @@ Base = declarative_base()
 
 
 class Neighborhoods_Model(Base):
+    """SQLalchemy model for neighborhood table."""
     __tablename__ = 'neighborhoods_wa'
     gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     geom = sa.Column(sa.UnicodeText, nullable=False)
     name = sa.Column(sa.UnicodeText, nullable=False)
-
 
     @classmethod
     def neighborhood(cls, lat, lon):
@@ -36,6 +34,7 @@ class Neighborhoods_Model(Base):
 
 
 class Incidents_Model(Base):
+    """SQLalchemy model for incident table."""
     __tablename__ = 'incidents'
     gid = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     units = sa.Column(sa.UnicodeText, nullable=False)
@@ -48,31 +47,6 @@ class Incidents_Model(Base):
     major_category = sa.Column(sa.UnicodeText, nullable=False)
     minor_category = sa.Column(sa.UnicodeText, nullable=False)
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
-
-    # @classmethod
-    # def by_gid(cls, gid):
-    #     return DBSession.query(cls).filter(cls.gid == gid).one()
-
-    # @classmethod
-    # def by_incident_type(cls, incident_type):
-    #     return (DBSession.query(cls).filter(cls.incident_type == incident_type)
-    #             .all())
-
-    # @classmethod
-    # def circle_radius(cls, lat, lon, radius):
-    #     return (DBSession.query(cls)
-    #             .filter(func.ST_Point_Inside_Circle(cls.the_geom,
-    #                                                 lon, lat, radius)).all()
-    #             )
-
-    # @classmethod
-    # def random_circle(cls, lat, lon, radius, limit):
-    #     """Outputs random entries from a given radius, with limited number."""
-    #     return (DBSession.query(cls)
-    #             .order_by(func.random())
-    #             .filter(func.ST_Point_Inside_Circle(cls.the_geom, lon, lat,
-    #                                                 radius)).limit(limit)
-    #             )
 
     @classmethod
     def cat_circle(cls, lat, lon, major_cat, radius=0.003, limit=1000):
@@ -101,7 +75,7 @@ class Incidents_Model(Base):
                     incidents_prior += 1
                 if time > one_year_ago_epoch:
                     break
-
+            # Calculate percentage change
             incidents_last_year = length_list-incidents_prior
             years_prior = (one_year_ago_epoch-list_of_times[0])/365
             incidents_per_year_prior = incidents_prior/years_prior
@@ -110,6 +84,7 @@ class Incidents_Model(Base):
                 100*(incidents_per_year_last_year-incidents_per_year_prior)
                 / incidents_per_year_prior)
 
+            # Prepare HTML with appropriate class so font color changes.
             if percent >= 0:
                 pos_neg = ("pos", "increased")
             else:
@@ -118,7 +93,7 @@ class Incidents_Model(Base):
                 '<span class="{}">{} {}%</span>'.format(pos_neg[0], pos_neg[1],
                                                         abs(round(percent, 2)))
                 )
-        except:
+        except:     # In case that no incidents are found in certain area
             return_string = '<span class="no_change">---- 0.00%   </span>'
             incidents_last_year = 0
         return {'string': return_string, 'year_count': incidents_last_year}

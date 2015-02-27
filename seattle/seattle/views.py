@@ -2,7 +2,6 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
 from .models import (
-    DBSession,
     Incidents_Model,
     Neighborhoods_Model,
     )
@@ -45,15 +44,13 @@ def line_plot_lat_long_ajax(request):
     lon = float(request.params.get('lon_cen', -122.3359059))
 
     neighborhood = Neighborhoods_Model.neighborhood(lat, lon)
-    # print 'lat: {}'.format(lat)
-    # print 'lon: {}'.format(lon)
+
     radius = 0.01      # in degrees
 
     # Query database for all incidents within a ~700m radius.
     try:
         incident_types = ['Fire', 'MVI', 'Crime']
         output = []
-        start_time = time.time()
         for inc_type in incident_types:
             (output.append(epoch_list(
                 Incidents_Model.cat_circle(lat, lon, inc_type, radius))))
@@ -61,7 +58,6 @@ def line_plot_lat_long_ajax(request):
         db_count = 0
         for x in range(3):
             db_count += len(output[x])
-        # print ('time to call db for initial query: {}'.format(time.time()-start_time))
     except DBAPIError:
         return Response(con_err_msg, content_type='text/plain', status_int=500)
 
