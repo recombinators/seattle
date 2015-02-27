@@ -127,6 +127,9 @@ map.on('moveend', function(e) {
         $(".crime").children().replaceWith(json.percentages.Crime);
         $(".fire").children().replaceWith(json.percentages.Fire);
         $(".accidents").children().replaceWith(json.percentages.MVI);
+        $(".crime_count").contents().replaceWith(json.counts.Crime);
+        $(".fire_count").contents().replaceWith(json.counts.Fire);
+        $(".accidents_count").contents().replaceWith(json.counts.MVI);
         $(".lat").replaceWith(json.lat);
         $(".lon").replaceWith(json.lon);
 
