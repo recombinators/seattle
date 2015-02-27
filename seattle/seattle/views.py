@@ -42,8 +42,8 @@ def line_plot_lat_long_ajax(request):
     Find all incidents within ~400m radius of location."""
     lat = request.params.get('lat_cen', 47.623636)
     lon = request.params.get('lon_cen', -122.336072)
-    print 'lat: {}'.format(lat)
-    print 'lon: {}'.format(lon)
+    # print 'lat: {}'.format(lat)
+    # print 'lon: {}'.format(lon)
     radius = 0.005      # in degrees
 
     # Query database for all incidents within a ~700m radius.
@@ -54,8 +54,7 @@ def line_plot_lat_long_ajax(request):
         for inc_type in incident_types:
             (output.append(epoch_list(
                 Incidents_Model.cat_circle(lat, lon, inc_type, radius))))
-        print ('time to call db for initial query: {}'
-               .format(time.time()-start_time))
+        # print ('time to call db for initial query: {}'.format(time.time()-start_time))
     except DBAPIError:
         return Response(con_err_msg, content_type='text/plain', status_int=500)
 
@@ -66,7 +65,7 @@ def line_plot_lat_long_ajax(request):
         temp = Incidents_Model.percentage(output[i])
         output_percentages[incident_types[i]] = temp['string']
         output_count[incident_types[i]] = temp['year_count']
-        print '{} count: {}'.format(incident_types[i], temp['year_count'])
+        # print '{} count: {}'.format(incident_types[i], temp['year_count'])
 
     # Generate data for graph
     try:

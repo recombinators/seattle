@@ -74,7 +74,7 @@ class Incidents_Model(Base):
         try:
             one_year_ago_epoch = list_of_times[-1]-365
             length_list = len(list_of_times)
-            print "length: {}".format(length_list)
+            # print "length: {}".format(length_list)
             incidents_prior = 0
             for time in list_of_times:
                 if time < one_year_ago_epoch:
@@ -104,20 +104,3 @@ class Incidents_Model(Base):
             return_string = '<span class="no_change">---- 0.00%   </span>'
             incidents_last_year = 0
         return {'string': return_string, 'year_count': incidents_last_year}
-
-
-    def json(self):
-        return {'gid': self.gid,
-                'units': self.units,
-                'date_time': self.date_time,
-                'incident_type': self.incident_type,
-                'address': self.address,
-                'incident_number': self.incident_number,
-                'latitude': self.latitude,
-                'longitude': self.longitude,
-                'the_geom': self.the_geom}
-
-
-# I don't know what this line is for:
-# Indexing: Let's hold off until we know our queries better
-# Index('my_index', Incidents_Model.gid, unique=True, mysql_length=255)
