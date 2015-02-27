@@ -39,7 +39,7 @@ def line_plot_lat_long_ajax(request):
     lon = request.params.get('lon_cen', -122.336072)
     print 'lat: {}'.format(lat)
     print 'lon: {}'.format(lon)
-    radius = 0.01 # in degrees
+    radius = 0.005 # in degrees
 
     # Query database for all incidents within a ~700m radius.
     try:
@@ -77,13 +77,13 @@ def line_plot_lat_long_ajax(request):
                  'mvi':  count[1][j], 'crime':  count[2][j]}
                 for j in range(number_months-1)]
     except ValueError:
-        months = []
-        count = []
+        data = []
 
     return {'output': data,
             'percentages': output_percentages,
             'counts': output_count,
-            'lat': round(lat, 3), 'lon': round(lon, 3)}
+            # 'lat': round(lat, 3), 'lon': round(lon, 3)}
+            'lat': lat, 'lon': lon}
 
 con_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
