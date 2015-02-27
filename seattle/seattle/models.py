@@ -49,7 +49,7 @@ class Incidents_Model(Base):
     the_geom = sa.Column(sa.UnicodeText, nullable=False)
 
     @classmethod
-    def cat_circle(cls, lat, lon, major_cat, radius=0.003, limit=1000):
+    def cat_circle(cls, lat, lon, major_cat, radius=0.0067):
         """Outputs list of incidents filtered by Major Category"""
         return (DBSession.query(cls.date_time)
                 # .order_by(func.random())
