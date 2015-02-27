@@ -14,6 +14,7 @@ from pyramid.scripts.common import parse_vars
 from ..models import (
     DBSession,
     Incidents_Model,
+    Neighborhoods_Model,
     Base,
     )
 
@@ -37,4 +38,6 @@ def main(argv=sys.argv):
     Base.metadata.create_all(engine)
     with transaction.manager:
         model = Incidents_Model()
+        model2 = Neighborhoods_Model()
         DBSession.add(model)
+        DBSession.add(model2)
