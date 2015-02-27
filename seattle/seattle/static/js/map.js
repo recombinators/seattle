@@ -18,20 +18,20 @@ var map = L.mapbox.map('map', 'jacques.la14ofjk', {
 function graph() {
     try {
         dates = [];
-        for (i = 0; i < bulk_data[0].length; i++) {
-            dates.push(new Date(bulk_data[0][i]*1000*60*60*24));
+        for (i = 0; i < data.length; i++) {
+            data[i]['month'] = new Date(data[i]['month']*1000*60*60*24);
         }
 
 
-        data = [];
-        for (i = 0; i < bulk_data[0].length; ++i) {
-          data.push({
-            'month': dates[i],
-            'fire': bulk_data[1][0][i],
-            'mvi': bulk_data[1][1][i],
-            'crime': bulk_data[1][2][i]
-          });
-        }
+        // data = [];
+        // for (i = 0; i < bulk_data[0].length; ++i) {
+        //   data.push({
+        //     'month': dates[i],
+        //     'fire': bulk_data[1][0][i],
+        //     'mvi': bulk_data[1][1][i],
+        //     'crime': bulk_data[1][2][i]
+        //   });
+        // }
 
         var w = 960,
             h = 500,
@@ -178,7 +178,7 @@ map.on('moveend', function(e) {
         $(".crime").children().replaceWith(json.percentages.crime);
         $(".fire").children().replaceWith(json.percentages.fire);
         $(".accidents").children().replaceWith(json.percentages.mvi);
-        bulk_data = json.output;
+        data = json.output;
         $(".graph").children().remove();
         graph();
     });
