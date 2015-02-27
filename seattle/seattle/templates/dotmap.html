@@ -49,7 +49,7 @@
     
   queue()
     .defer(d3.json, 'admin1_poly_topo.json')
-    .defer(d3.json, 'usa_cities.json')
+    .defer(d3.json, 'streets.topojson')
     .await(makeMyMap);
 
   function makeMyMap(error, states, cities) {
