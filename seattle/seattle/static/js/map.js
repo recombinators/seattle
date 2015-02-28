@@ -20,7 +20,7 @@ map.addControl(L.mapbox.geocoderControl('mapbox.places', {
 // Disable scrollwheel zoom
 map.scrollWheelZoom.disable();
 
-function graph() {
+function stackedbar() {
     var w = 720,
         h = 500,
         p = [30, 20, 40, 0],
@@ -37,7 +37,7 @@ function graph() {
             return "<span>" + d.y + "</span>";
         })
 
-    var svg = d3.select(".graph").append("svg:svg")
+    var svg = d3.select(".stackedbar").append("svg:svg")
         .attr("width", w)
         .attr("height", h)
         .append("svg:g")
@@ -195,9 +195,16 @@ function groupedbar() {
         .attr("y", function(d) { return y(d.value); })
         .attr("height", function(d) { return height - y(d.value); })
         .style("fill", function(d) { return color(d.name); });
+
+    types.append("text")
+        .attr("dy", ".75em")
+        .attr("y", function(d) { return height - y(d.value); })
+        .attr("x", x1.rangeBand() / 2)
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.value; });
 }
 
-window.onload = graph();
+window.onload = stackedbar();
 window.onload = groupedbar();
 
 // On move, recalculate center
@@ -226,15 +233,15 @@ map.on('moveend', function(e) {
 
         
         // Update graph
-        compare_data = json.compare
+        compare_data = json.compare;
         data = json.output;
         if (json.output.length === 0) {
-            $(".graph").children().replaceWith('No data available.')
+            $(".stackedbar").children().replaceWith('No data available.')
             $(".groupedbar").children().replaceWith('No data available.')
         } else {
-            $(".graph").contents().remove();
+            $(".stackedbar").contents().remove();
             $(".groupedbar").contents().remove();
-            graph();
+            stackedbar();
             groupedbar();
         }
 
