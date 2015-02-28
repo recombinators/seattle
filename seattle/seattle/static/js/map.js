@@ -26,7 +26,7 @@ function stackedbar() {
         p = [30, 20, 40, 0],
         x = d3.scale.ordinal().rangeRoundBands([0, w - p[1] - p[3]]),
         y = d3.scale.linear().range([0, h - p[0] - p[2]]),
-        z = d3.scale.ordinal().range(["#FDE668", "#FFBE1A", "#E09200"])
+        z = d3.scale.ordinal().range(["#FDE668", "#FFBE1A", "#E09200"]),
         yx = d3.scale.linear().range([0, h - p[0] - p[2]]),
         format = d3.time.format("%b %Y");
 
@@ -138,7 +138,7 @@ function groupedbar() {
         .range([height, 0]);
 
     var color = d3.scale.ordinal()
-        .range(["#EEE", "FF0000"]);
+        .range(["#A9A9A9", "FF0000"]);
 
     var xAxis = d3.svg.axis()
         .scale(x0)
@@ -155,6 +155,8 @@ function groupedbar() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    var formatCount = d3.format(",.0f");
+
     var incidentNames = d3.keys(compare_data[0]).filter(function(key) { return key !== "types"; });
     
     compare_data.forEach(function(d) {
@@ -163,7 +165,7 @@ function groupedbar() {
 
 
     x0.domain(compare_data.map(function(d) { return d.types; }));
-    x1.domain(incidentNames).rangeRoundBands([0, x0.rangeBand()]);
+    x1.domain(incidentNames).rangeRoundBands([x0.rangeBand(), 0]);
     y.domain([0, d3.max(compare_data, function(d) { return d3.max(d.incidents, function(d) { return d.value; }); })]);
 
     svg.append("g")
@@ -196,12 +198,25 @@ function groupedbar() {
         .attr("height", function(d) { return height - y(d.value); })
         .style("fill", function(d) { return color(d.name); });
 
-    types.append("text")
+    types.selectAll("text1")
+        .data(function(d) { return d.incidents; })
+        .enter().append("text")
         .attr("dy", ".75em")
-        .attr("y", function(d) { return height - y(d.value); })
-        .attr("x", x1.rangeBand() / 2)
+        .attr("x", function(d) { return x1(d.name) + x1.rangeBand() / 2; })
+        .attr("y", function(d) { return y(d.value) - 40; })
         .attr("text-anchor", "middle")
-        .text(function(d) { return d.value; });
+        .text(function(d) { return formatCount(d.value); })
+        .attr("fill", "black");
+
+    types.selectAll("text2")
+        .data(function(d) { return d.incidents; })
+        .enter().append("text")
+        .attr("dy", ".75em")
+        .attr("x", function(d) { return x1(d.name) + x1.rangeBand() / 2; })
+        .attr("y", function(d) { return y(d.value) - 20; })
+        .attr("text-anchor", "middle")
+        .text(function(d) { return d.name; })
+        .attr("fill", "black");
 }
 
 window.onload = stackedbar();
@@ -236,16 +251,14 @@ map.on('moveend', function(e) {
         compare_data = json.compare;
         data = json.output;
         if (json.output.length === 0) {
-            $(".stackedbar").children().replaceWith('No data available.')
-            $(".groupedbar").children().replaceWith('No data available.')
+            $(".stackedbar").children().replaceWith('No data available.');
+            $(".groupedbar").children().replaceWith('No data available.');
         } else {
             $(".stackedbar").contents().remove();
             $(".groupedbar").contents().remove();
             stackedbar();
             groupedbar();
         }
-
-
     });
 });
 
