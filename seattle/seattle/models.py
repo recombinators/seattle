@@ -24,9 +24,11 @@ class Neighborhoods_Model(Base):
     name = sa.Column(sa.UnicodeText, nullable=False)
 
     @classmethod
-    def neighborhood(cls, lat, lon):
+    def neighborhood(cls, lat, lon, session=None):
         """Output neighborhood that contains lat lon."""
-        return (DBSession.query(cls)
+        if session is None:
+            session = DBSession
+        return (session.query(cls)
                 .filter(func.ST_Within(func.ST_SetSRID(func
                         .ST_MakePoint(lon, lat), 4236), func
                     .ST_SetSRID(cls.geom, 4236))).one().name

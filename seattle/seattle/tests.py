@@ -1,55 +1,32 @@
-import unittest
-import transaction
+#from contextlib import closing
+#import unittest
+#import transaction
 
-from pyramid import testing
+#from pyramid_sqlalchemy.testing import DatabaseTestCase
+#from pyramid import testing
 
-from .models import DBSession
+# USE THIS FOR TESTING
+# py.test tests.py --sql-url=postgresql://Joel:@localhost/seattle_test --sql-echo -s
 
+from models import DBSession, Incidents_Model, Neighborhoods_Model
+from views import line_plot, line_plot_lat_long_ajax
 
-class TestMyViewSuccessCondition(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp()
-        from sqlalchemy import create_engine
-        engine = create_engine('sqlite://')
-        from .models import (
-            Base,
-            MyModel,
-            )
-        DBSession.configure(bind=engine)
-        Base.metadata.create_all(engine)
-        with transaction.manager:
-            model = MyModel(name='one', value=55)
-            DBSession.add(model)
-
-    def tearDown(self):
-        DBSession.remove()
-        testing.tearDown()
-
-    def test_passing_view(self):
-        from .views import my_view
-        request = testing.DummyRequest()
-        info = my_view(request)
-        self.assertEqual(info['one'].name, 'one')
-        self.assertEqual(info['project'], 'seattle')
+import pytest
 
 
-class TestMyViewFailureCondition(unittest.TestCase):
-    def setUp(self):
-        self.config = testing.setUp()
-        from sqlalchemy import create_engine
-        engine = create_engine('sqlite://')
-        from .models import (
-            Base,
-            MyModel,
-            )
-        DBSession.configure(bind=engine)
+TEST_DSN = 'dbname=seattle_test user=Joel'
 
-    def tearDown(self):
-        DBSession.remove()
-        testing.tearDown()
+# NEIGHBORHOOD TESTS
+def test_neighborhood_returns_correctly(sql_session):
+    neighborhood = Neighborhoods_Model.neighborhood(47.6770046, -122.3849916,
+                                                    sql_session)
+    assert neighborhood == 'Loyal Heights'
 
-    def test_failing_view(self):
-        from .views import my_view
-        request = testing.DummyRequest()
-        info = my_view(request)
-        self.assertEqual(info.status_int, 500)
+
+def test_neighborhood2_returns_correctly(sql_session):
+    neighborhood = Neighborhoods_Model.neighborhood(47.698, -122.302,
+                                                    sql_session)
+    assert neighborhood == 'Meadowbrook'
+
+
+
