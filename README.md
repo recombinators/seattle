@@ -62,3 +62,7 @@ Thanks!
 [:older_man:](https://github.com/poolbath1) [:hurtrealbad:](https://github.com/constanthatz) [:bowtie:](https://github.com/bm5w) [:cat:](https://github.com/jqtrde)
 
 
+See Also
+--------
+
+- [Predicting and plotting crime in Seattle](https://racketracer.wordpress.com/2015/03/02/predicting-and-plotting-crime-in-seattle/)
