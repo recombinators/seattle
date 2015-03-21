@@ -68,3 +68,7 @@ output.sql
 # QGIS stuff
 seattle.qgs
 .~lock.distinct_incident_types.ods#
+
+# Sublime
+*.sublime-project
+*.sublime-workspace
